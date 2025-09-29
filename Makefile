@@ -1,49 +1,49 @@
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror
 
 INCDIRS := . libft/includes
 CFLAGS  += $(addprefix -I,$(INCDIRS))
 
-LDLIBS = -lreadline -lncurses
+LDLIBS  = -lreadline -lncurses
+LDFLAGS =
 
-NAME = minishell
+NAME    = minishell
 
-
-SRCDIR = src
-OBJDIR = obj
+SRCDIR  = src
+OBJDIR  = obj
 
 LIBFT_DIR = ./libft
-LIBFT_A = $(LIBFT_DIR)/libft.a
+LIBFT_A   = $(LIBFT_DIR)/libft.a
 
+SRC := $(patsubst ./%,%,$(shell find $(SRCDIR) -type f -name '*.c'))
 
-SRC = $(wildcard $(SRCDIR)/*.c)
+OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 
-
-OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
-DEP = $(OBJ:.o=.d)
-
+.PHONY: all clean fclean re print-%
 
 all: $(LIBFT_A) $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT_A) $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIBFT_A) $(LDFLAGS) $(LDLIBS)
 
 $(LIBFT_A):
-	make -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
-	make -C $(LIBFT_DIR) clean
+	rm -rf $(OBJDIR)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -f $(NAME)
-	make -C $(LIBFT_DIR) fclean
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
--include $(DEP)
 
-.PHONY: all clean fclean re
