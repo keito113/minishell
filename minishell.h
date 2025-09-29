@@ -9,6 +9,8 @@
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
 
 // ノード種別（AST）
@@ -76,7 +78,14 @@ int							apply_redirs(const t_cmd *cmd);
 void						exec_external(char *const argv[],
 								char *const envp[]);
 char						*find_cmd_path(const char *cmd, char *const *envp);
-// int							prepare_heredocs_for_cmd(t_shell *sh,
-// t_cmd *cmd);
+int							read_heredoc_into_fd(int write_fd, t_redir *redir,
+								t_shell *sh);
+int							prepare_cmd_heredocs(t_cmd *cmd, t_shell *sh,
+								t_ast *node);
+void						close_hdocs_in_cmd(t_cmd *cmd);
+void						close_all_prepared_hdocs(t_ast *node);
+int							status_to_exitcode(int wstatus);
+void						close_hdocs_in_cmd(t_cmd *cmd);
+void						close_all_prepared_hdocs(t_ast *node);
 
 #endif

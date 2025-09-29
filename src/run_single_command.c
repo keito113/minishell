@@ -4,22 +4,39 @@ int	run_single_command(t_cmd *cmd, t_shell *sh)
 {
 	pid_t	pid;
 
+	pid = 0;
 	if (!cmd->argv || !cmd->argv[0])
-		return (1);
+	{
+		sh->last_status = 1;
+		return (sh->last_status);
+	}
+	//あとでビルトイン実装
 	if (cmd->is_builtin)
-		return (1); //あとでビルトイン実装
-	// if (prepare_heredocs_for_cmd(sh, cmd) < 0)
-	// {
-	// 	// Ctrl-C などで中断された場合はここで終了
-	// 	return (1);
-	// }
+	{
+		sh->last_status = 1;
+		return (sh->last_status);
+	}
+	if (prepare_cmd_heredocs(cmd, sh, NULL) != 0)
+	{
+		// 途中で失敗/中断（130など）したら実行しない
+		close_hdocs_in_cmd(cmd);
+		return (sh->last_status);
+	}
 	pid = fork();
+	if (pid < 0)
+	{
+		sh->last_status = 1;
+		close_hdocs_in_cmd(cmd);
+		return (1);
+	}
 	if (pid == 0)
 	{
 		if (apply_redirs(cmd) < 0)
 			exit(1);
 		exec_external(cmd->argv, sh->envp);
 	}
+	waitpid(pid, &sh->last_status, 0);
+	close_hdocs_in_cmd(cmd);
 	return (0);
 }
 

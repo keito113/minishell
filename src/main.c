@@ -127,15 +127,35 @@ static void	free_argv(char **v)
 
 // ---- テストケース -----------------------------------------------------
 
-// 1) grep b < infile > outfile
+// // 1) grep b < infile > outfile
+// static void	build_case1_grep(t_ast *out_ast)
+// {
+// 	memset(out_ast, 0, sizeof(*out_ast));
+// 	out_ast->type = AST_CMD;
+// 	out_ast->as.cmd.argv = make_argv(2, "grep", "b", NULL, NULL, NULL);
+// 	out_ast->as.cmd.redirs = NULL;
+// 	push_redir(&out_ast->as.cmd.redirs, R_IN, "infile");   // デフォルトで fd 0
+// 	push_redir(&out_ast->as.cmd.redirs, R_OUT, "outfile"); // デフォルトで fd 1
+// 	out_ast->as.cmd.is_builtin = 0;
+// }
+
+// here_doc test
 static void	build_case1_grep(t_ast *out_ast)
 {
 	memset(out_ast, 0, sizeof(*out_ast));
 	out_ast->type = AST_CMD;
 	out_ast->as.cmd.argv = make_argv(2, "grep", "b", NULL, NULL, NULL);
 	out_ast->as.cmd.redirs = NULL;
-	push_redir(&out_ast->as.cmd.redirs, R_IN, "infile");   // デフォルトで fd 0
-	push_redir(&out_ast->as.cmd.redirs, R_OUT, "outfile"); // デフォルトで fd 1
+	// ここを R_IN → R_HDOC に変更。limiter は例として "EOF"
+	t_redir *r = push_redir(&out_ast->as.cmd.redirs, R_HDOC, "EOF");
+		// デフォルトで fd 0
+	if (r)
+	{
+		r->quoted = 0;   // 0: 本文で $展開する / 1: 展開しない
+		r->hdoc_fd = -1; // まだ未準備。prepare_heredocs で埋まる
+							// r->fd_target は 0 のままでOK（stdin）
+	}
+	push_redir(&out_ast->as.cmd.redirs, R_OUT, "outfile"); // fd 1
 	out_ast->as.cmd.is_builtin = 0;
 }
 
