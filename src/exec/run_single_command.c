@@ -11,16 +11,16 @@ int	run_single_command(t_cmd *cmd, t_shell *sh)
 		sh->last_status = 1;
 		return (sh->last_status);
 	}
-	//あとでビルトイン実装
-	if (cmd->is_builtin)
-	{
-		sh->last_status = 1;
-		return (sh->last_status);
-	}
 	if (prepare_cmd_heredocs(cmd, sh, NULL) != 0)
 	{
 		// 途中で失敗/中断（130など）したら実行しない
 		close_hdocs_in_cmd(cmd);
+		return (sh->last_status);
+	}
+	if (cmd->is_builtin)
+	{
+		//あとでビルトイン実装
+		sh->last_status = 1;
 		return (sh->last_status);
 	}
 	pid = fork();
