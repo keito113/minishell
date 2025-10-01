@@ -3,6 +3,7 @@
 int	run_single_command(t_cmd *cmd, t_shell *sh)
 {
 	pid_t	pid;
+	int		status;
 
 	pid = 0;
 	if (!cmd->argv || !cmd->argv[0])
@@ -35,7 +36,13 @@ int	run_single_command(t_cmd *cmd, t_shell *sh)
 			exit(1);
 		exec_external(cmd->argv, sh->envp);
 	}
-	waitpid(pid, &sh->last_status, 0);
+	waitpid(pid, status, 0);
+	if (WIFEXITED(status))
+		sh->last_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		sh->last_status = 128 + WTERMSIG(status);
+	else
+		sh->last_status = 1;
 	close_hdocs_in_cmd(cmd);
 	return (0);
 }
@@ -96,7 +103,7 @@ int	apply_redirs(const t_cmd *cmd)
 	{
 		from_fd = -1;
 		to_fd = inter_target_fd(redir);
-		if (to_fd < 0 || to_fd >= 1024)
+		if (to_fd < 0 || to_fd >= 1024) //最適なfd数に変更
 			return (perror("bad target fd"), -1);
 		from_fd = open_src_fd(redir);
 		if (from_fd < 0)

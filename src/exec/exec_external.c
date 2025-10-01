@@ -6,7 +6,7 @@ static void	validate_and_exec(const char *path, char *const argv[],
 	// 実体の存在チェック（ここで ENOENT を弾く）
 	if (access(path, F_OK) != 0)
 		exit(127);
-		
+
 	// ディレクトリは不可
 
 
