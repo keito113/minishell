@@ -113,8 +113,7 @@ int	apply_redirs(const t_cmd *cmd)
 			if (dup2(from_fd, to_fd) < 0)
 			{
 				perror("dup2");
-				if (redir->kind != R_HDOC)
-					close(from_fd);
+				close(from_fd);
 				return (-1);
 			}
 		}
