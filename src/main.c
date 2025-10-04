@@ -125,6 +125,24 @@ static void	free_argv(char **v)
 	free(v);
 }
 
+static void	free_ast(t_ast *node)
+{
+	if (!node)
+		return ;
+	if (node->type == AST_PIPE)
+	{
+		free_ast(node->as.pipe.left);
+		free_ast(node->as.pipe.right);
+		free(node);
+	}
+	else // AST_CMD
+	{
+		free_argv(node->as.cmd.argv);
+		free_redirs(node->as.cmd.redirs);
+		free(node);
+	}
+}
+
 // ---- テストケース -----------------------------------------------------
 
 // // 1) grep b < infile > outfile
@@ -142,13 +160,15 @@ static void	free_argv(char **v)
 // here_doc test
 static void	build_case1_grep(t_ast *out_ast)
 {
+	t_redir	*r;
+
 	memset(out_ast, 0, sizeof(*out_ast));
 	out_ast->type = AST_CMD;
 	out_ast->as.cmd.argv = make_argv(2, "grep", "b", NULL, NULL, NULL);
 	out_ast->as.cmd.redirs = NULL;
 	// ここを R_IN → R_HDOC に変更。limiter は例として "EOF"
-	t_redir *r = push_redir(&out_ast->as.cmd.redirs, R_HDOC, "EOF");
-		// デフォルトで fd 0
+	r = push_redir(&out_ast->as.cmd.redirs, R_HDOC, "EOF");
+	// デフォルトで fd 0
 	if (r)
 	{
 		r->quoted = 0;   // 0: 本文で $展開する / 1: 展開しない
@@ -191,12 +211,30 @@ static void	build_case3_echo(t_ast *out_ast, int as_builtin)
 
 // 4) 左辺FD指定の検証：grep b NO_SUCH_FILE < infile > out.txt 2>> err.txt
 //    → stdout は out.txt、stderr は err.txt（追記）
+// static void	build_case4_fd_targets(t_ast *out_ast)
+// {
+// 	memset(out_ast, 0, sizeof(*out_ast));
+// 	out_ast->type = AST_CMD;
+// 	// 存在しないファイルを引数に入れて stderr を必ず発生させる
+// 	out_ast->as.cmd.argv = make_argv(3, "grep", "b", "NO_SUCH_FILE", NULL,
+// 			NULL);
+// 	out_ast->as.cmd.is_builtin = 0;
+// 	out_ast->as.cmd.redirs = NULL;
+// 	push_redir(&out_ast->as.cmd.redirs, R_IN, "infile");
+// 	// < infile      → fd 0
+// 	push_redir(&out_ast->as.cmd.redirs, R_OUT, "out.txt");
+// 	// > out.txt     → fd 1
+// 	push_redir_ex(&out_ast->as.cmd.redirs, R_APP, "err.txt", 2);
+// 	// 2>> err.txt   → fd 2
+// }
+
+// test_127
 static void	build_case4_fd_targets(t_ast *out_ast)
 {
 	memset(out_ast, 0, sizeof(*out_ast));
 	out_ast->type = AST_CMD;
 	// 存在しないファイルを引数に入れて stderr を必ず発生させる
-	out_ast->as.cmd.argv = make_argv(3, "grep", "b", "NO_SUCH_FILE", NULL,
+	out_ast->as.cmd.argv = make_argv(2, "nosuchcommand", NULL, NULL, NULL,
 			NULL);
 	out_ast->as.cmd.is_builtin = 0;
 	out_ast->as.cmd.redirs = NULL;
@@ -295,6 +333,69 @@ static void	build_case9_hdoc_target0_and_stderr(t_ast *out_ast)
 	// 期待: STDOUT に "X\nY\n"、err.txt（通常は空）
 }
 
+// 11) パイプ: cat | grep b > outfile
+static void	build_case_pipe_grep_cat(t_ast *out_ast)
+{
+	t_ast	*left;
+	t_ast	*right;
+
+	left = calloc(1, sizeof(t_ast));
+	right = calloc(1, sizeof(t_ast));
+	// 左: cat < infile
+	left->type = AST_CMD;
+	left->as.cmd.argv = make_argv(2, "/bin/cat", NULL, NULL, NULL, NULL);
+	left->as.cmd.redirs = NULL;
+	push_redir(&left->as.cmd.redirs, R_IN, "infile");
+	left->as.cmd.is_builtin = 0;
+	// 右: grep b > outfile
+	right->type = AST_CMD;
+	right->as.cmd.argv = make_argv(2, "grep", "b", NULL, NULL, NULL);
+	right->as.cmd.redirs = NULL;
+	push_redir(&right->as.cmd.redirs, R_OUT, "outfile");
+	right->as.cmd.is_builtin = 0;
+	// パイプノード
+	memset(out_ast, 0, sizeof(*out_ast));
+	out_ast->type = AST_PIPE;
+	out_ast->as.pipe.left = left;
+	out_ast->as.pipe.right = right;
+}
+
+static void	build_case_pipe_cat_grep_wc(t_ast *out_ast)
+{
+	t_ast	*pipe1;
+
+	t_ast *left, *mid, *right;
+	// left: cat < infile
+	left = calloc(1, sizeof(t_ast));
+	left->type = AST_CMD;
+	left->as.cmd.argv = make_argv(2, "/bin/cat", NULL, NULL, NULL, NULL);
+	left->as.cmd.redirs = NULL;
+	push_redir(&left->as.cmd.redirs, R_IN, "infile");
+	left->as.cmd.is_builtin = 0;
+	// mid: grep b
+	mid = calloc(1, sizeof(t_ast));
+	mid->type = AST_CMD;
+	mid->as.cmd.argv = make_argv(2, "grep", "b", NULL, NULL, NULL);
+	mid->as.cmd.redirs = NULL;
+	mid->as.cmd.is_builtin = 0;
+	// right: wc -l > outfile
+	right = calloc(1, sizeof(t_ast));
+	right->type = AST_CMD;
+	right->as.cmd.argv = make_argv(3, "wc", "-l", NULL, NULL, NULL);
+	right->as.cmd.redirs = NULL;
+	push_redir(&right->as.cmd.redirs, R_OUT, "outfile");
+	right->as.cmd.is_builtin = 0;
+	// パイプノード（左: cat < infile | grep b, 右: wc -l > outfile）
+	pipe1 = calloc(1, sizeof(t_ast));
+	pipe1->type = AST_PIPE;
+	pipe1->as.pipe.left = left;
+	pipe1->as.pipe.right = mid;
+	memset(out_ast, 0, sizeof(*out_ast));
+	out_ast->type = AST_PIPE;
+	out_ast->as.pipe.left = pipe1;
+	out_ast->as.pipe.right = right;
+}
+
 // ---- main -------------------------------------------------------------
 
 int	main(int argc, char **argv, char **envp)
@@ -345,6 +446,12 @@ int	main(int argc, char **argv, char **envp)
 	case 10:
 		build_case9_hdoc_target0_and_stderr(&ast);
 		break ;
+	case 11: // cat | grep b > outfile
+		build_case_pipe_grep_cat(&ast);
+		break ;
+	case 12: // cat < infile | grep b | wc -l > outfile
+		build_case_pipe_cat_grep_wc(&ast);
+		break ;
 	default:
 		fprintf(stderr, "usage: %s [1..10]\n", argv[0]);
 		fprintf(stderr, "  1: grep b < infile > outfile\n");
@@ -359,12 +466,18 @@ int	main(int argc, char **argv, char **envp)
 		fprintf(stderr, "  8: /bin/cat <<EOF  (unquoted)\n");
 		fprintf(stderr, "  9: /bin/cat <<'EOF' (quoted)\n");
 		fprintf(stderr, " 10: 0<<LIM /bin/cat  2> err.txt\n");
+		fprintf(stderr, " 12: /bin/cat < infile | grep b | wc -l > outfile\n");
 		return (2);
 	}
-	status = run_single_command(&ast.as.cmd, &sh);
+	status = exec_entry(&ast, &sh);
 	printf("[status] %d\n", status);
 	// cleanup
-	free_argv(ast.as.cmd.argv);
-	free_redirs(ast.as.cmd.redirs);
+	if (ast.type == AST_PIPE)
+		free_ast(ast.as.pipe.left);
+	if (ast.type == AST_PIPE)
+		free_ast(ast.as.pipe.right);
+	else
+		free_argv(ast.as.cmd.argv), free_redirs(ast.as.cmd.redirs);
+	return (status != 0);
 	return (status != 0);
 }
