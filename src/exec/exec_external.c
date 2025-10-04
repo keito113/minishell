@@ -1,21 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_external.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/04 14:05:28 by takawagu          #+#    #+#             */
+/*   Updated: 2025/10/04 14:20:06 by takawagu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	validate_and_exec(const char *path, char *const argv[],
 		char *const envp[])
 {
-	// 実体の存在チェック（ここで ENOENT を弾く）
 	if (access(path, F_OK) != 0)
 		exit(127);
-
-	// ディレクトリは不可
-
-
-	// 実行権限
 	if (access(path, X_OK) != 0)
 		exit(126);
 	execve(path, argv, envp);
-	//エラー情報の保持の
-	// ここに来たら execve 失敗
 	if (errno == ENOENT)
 		exit(127);
 	else
@@ -24,12 +28,12 @@ static void	validate_and_exec(const char *path, char *const argv[],
 
 void	exec_external(char *const argv[], char *const envp[])
 {
+	char	*path;
+
 	if (!argv || !argv[0])
 		exit(0);
-
-	char *path = find_cmd_path(argv[0], envp);
+	path = find_cmd_path(argv[0], envp);
 	if (!path)
 		exit(127);
-
 	validate_and_exec(path, argv, envp);
 }
