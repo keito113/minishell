@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:15:56 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/13 18:22:42 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:18:19 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ void	free_cmd(t_cmd *cmd)
 	{
 		i = 0;
 		while (cmd->argv[i])
+		{
 			free(cmd->argv[i]);
+			i++;
+		}
 		free(cmd->argv);
 		cmd->argv = NULL;
-		i++;
 	}
 	while (cmd->redirs)
 	{

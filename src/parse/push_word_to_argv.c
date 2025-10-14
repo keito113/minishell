@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 14:02:11 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/14 13:27:59 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/14 14:49:40 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ static int	grow_argv_with_word(t_cmd *cmd, char *word, size_t old_len)
 int	push_word_to_argv(t_cmd *cmd, const t_token *token)
 {
 	char	**old_argv;
-	char	**new_argv;
-	size_t	index;
 	size_t	old_argv_len;
 	char	*word;
 

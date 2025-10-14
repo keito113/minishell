@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 18:51:03 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/14 13:47:44 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/14 15:23:34 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ static int	dispatch_token(t_cmd *cmd, const t_token *token, size_t len,
 
 t_ast	*parse_command(const t_token *token, size_t len, size_t *idx)
 {
-	t_cmd				cmd;
-	t_ast				*node;
-	const t_tok_kind	kind = token[*idx].token_kind;
+	t_cmd		cmd;
+	t_ast		*node;
+	t_tok_kind	kind;
 
 	cmd = (t_cmd){0};
 	while (*idx < len)
 	{
+		kind = token[*idx].token_kind;
 		if (kind == TK_PIPE || kind == TK_EOF)
 			break ;
 		if (dispatch_token(&cmd, token, len, idx) != 0)
