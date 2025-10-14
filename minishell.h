@@ -61,8 +61,8 @@ typedef struct s_token
 //トークンの配列をしまう構造体
 typedef struct s_tokvec
 {
-	t_token					*vector;
-	size_t					len;
+	t_token *vector; // token構造体の配列
+	size_t len;      //配列の要素数
 }							t_tokvec;
 
 // ノード種別（AST）
@@ -156,6 +156,12 @@ t_ast						*parse_command(const t_token *vector, size_t len,
 								size_t *idx);
 int							is_redir_op(t_tok_kind k);
 int							precheck_syntax(const t_tokvec *tv);
+int							push_word_to_argv(t_cmd *cmd, const t_token *token);
+int							push_redir(t_cmd *cmd, const t_token *op_tok,
+								const t_token *word_tok);
+void						free_cmd(t_cmd *cmd);
+t_ast						*parse_command_fail(t_cmd *cmd);
+int							syntax_fail(const t_token *tok);
 
 // pipe
 int							reap_pipeline_and_set_last_status(pid_t last_pid,
