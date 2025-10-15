@@ -427,7 +427,7 @@ int	main(int argc, char **argv, char **envp)
 			{.args = "grep", .token_kind = TK_WORD, .fd_left = -1},
 			{.args = "b", .token_kind = TK_WORD, .fd_left = -1},
 			{.token_kind = TK_HEREDOC, .fd_left = -1, .hdoc_quoted = 0},
-			{.args = "EOF", .token_kind = TK_WORD, .fd_left = -1},
+			// {.args = "EOF", .token_kind = TK_WORD, .fd_left = -1},
 			{.token_kind = TK_REDIR_OUT, .fd_left = -1},
 			{.args = "outfile", .token_kind = TK_WORD, .fd_left = -1},
 			{.token_kind = TK_EOF, .fd_left = -1},
