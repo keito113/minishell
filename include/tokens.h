@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 11:44:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/17 10:20:34 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/20 15:24:00 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,9 @@ void		wb_init(t_wbuild *wb);
 int			is_space_tab(char c);
 void		read_op(const char *s, size_t i, t_tok_kind *k, size_t *len);
 char		*strndup_x(const char *p, size_t n);
+
+// tokens_utils_fd.c
+int			parse_fd_int_slice(const char *s, size_t l, size_t r, int *out_fd);
 int			read_fd_left(const char *s, size_t op_pos, int *out_fd);
 
 // tokens_word.c
