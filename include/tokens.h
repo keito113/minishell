@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 11:44:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/20 15:24:00 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/21 12:08:01 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void		wb_init(t_wbuild *wb);
 int			is_space_tab(char c);
 void		read_op(const char *s, size_t i, t_tok_kind *k, size_t *len);
 char		*strndup_x(const char *p, size_t n);
+size_t		parts_total_len(const t_wordinfo *w);
 
 // tokens_utils_fd.c
 int			parse_fd_int_slice(const char *s, size_t l, size_t r, int *out_fd);
@@ -167,5 +168,6 @@ int			tok_lex_line(const char *s, t_tokvec *out, int *err);
 int			tok_is_redir(t_tok_kind k);
 void		finalize_hdoc_flags(t_tokvec *tv);
 int			syntax_check(const t_tokvec *tv);
+void		finalize_word_args(t_tokvec *tv);
 
 #endif

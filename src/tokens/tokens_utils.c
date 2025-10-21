@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 17:25:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/20 15:24:09 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/21 11:51:59 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,19 @@ char	*strndup_x(const char *p, size_t n)
 	}
 	copy[i] = '\0';
 	return (copy);
+}
+
+size_t	parts_total_len(const t_wordinfo *w)
+{
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 0;
+	while (i < w->parts_count)
+	{
+		len += ft_strlen(w->parts[i].text);
+		i++;
+	}
+	return (len);
 }
