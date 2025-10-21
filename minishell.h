@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "libft.h"
+# include "tokens.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -12,74 +13,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
-// TOKENの種類を判別
-typedef enum e_tok_kind
-{
-	TK_WORD,      // コマンド名・引数・リダイレクトのターゲット（まだ展開前）
-	TK_PIPE,      // |
-	TK_REDIR_IN,  // <
-	TK_REDIR_OUT, // >
-	TK_REDIR_APP, // >>
-	TK_HEREDOC,   // <<
-	TK_EOF        // 入力末尾
-}							t_tok_kind;
-
-//クォートの種類を判別
-typedef enum e_quote_kind
-{
-	NO_QUOTE,
-	SINGLE,
-	DOUBLE
-}							t_quote_kind;
-
-typedef struct s_parts
-{
-	char *text;         // 生（クォートは外さない or 外すなら別マスク）
-	t_quote_kind quote; // NO_QUOTE / SINGLE / DOUBLE
-}							t_parts;
-
-//トークンの中身を細かく分割した構造体
-typedef struct s_wordinfo
-{
-	t_parts *parts;     // 連結で1語を構成（例:  a"$USER"'x' ）
-	size_t parts_count; // parts の数
-	int had_dollar;     // '$' を含む（SINGLE 内は無視するため後工程が最適化できる）
-	int had_quotes;     // どこかにクォートがあった（quote-removalの有無判定に便利）
-}							t_wordinfo;
-
-/* 1トークン */
-typedef struct s_token
-{
-	char *args;            //文字列
-	t_tok_kind token_kind; // WORD/PIPE/RE_IN/OUT/APP/HEREDOC/EOF
-	t_wordinfo word_info;  // 文字列とそれに紐づく情報
-	int fd_left;           // 2> 等の左FD（なければ -1）
-	int hdoc_quoted;       // TK_HEREDOC 用: リミッタがクォートされていたか
-}							t_token;
-
-//トークンの配列をしまう構造体
-typedef struct s_tokvec
-{
-	t_token *vector; // token構造体の配列
-	size_t len;      //配列の要素数
-}							t_tokvec;
-
-// ノード種別（AST）
-typedef enum e_ast_type
-{
-	AST_PIPE,
-	AST_CMD
-}							t_ast_type;
-
-// リダイレクト種別
-typedef enum e_rtype
-{
-	R_IN,  // <
-	R_OUT, // >
-	R_APP, // >>
-	R_HDOC // <<
-}							t_rtype;
 
 // 1件のリダイレクト
 typedef struct s_redir
@@ -146,8 +79,6 @@ int							read_heredoc_into_fd(int write_fd, t_redir *redir,
 								t_shell *sh);
 int							prepare_cmd_heredocs(t_cmd *cmd, t_shell *sh,
 								t_ast *node);
-void						close_hdocs_in_cmd(t_cmd *cmd);
-void						close_all_prepared_hdocs(t_ast *node);
 void						close_hdocs_in_cmd(t_cmd *cmd);
 void						close_all_prepared_hdocs(t_ast *node);
 

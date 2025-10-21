@@ -6,34 +6,18 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 15:03:39 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/17 10:45:13 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/21 12:18:03 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
 
-static size_t	parts_total_len(const t_wordinfo *w)
-{
-	size_t	i;
-	size_t	len;
-
-	i = 0;
-	len = 0;
-	while (i < w->parts_count)
-	{
-		len += ft_strlen(w->parts[i].text);
-		i++;
-	}
-	return (len);
-}
-
 static char	*join_parts_text(const t_wordinfo *w)
 {
-	size_t		len;
-	char		*buf;
-	size_t		i;
-	size_t		k;
-	const char	*p;
+	size_t	len;
+	char	*buf;
+	size_t	i;
+	size_t	k;
 
 	len = parts_total_len(w);
 	buf = malloc(len + 1);
@@ -43,9 +27,8 @@ static char	*join_parts_text(const t_wordinfo *w)
 	k = 0;
 	while (i < w->parts_count)
 	{
-		p = w->parts[i].text;
-		ft_memcpy(buf + k, p, ft_strlen(p));
-		k += ft_strlen(p);
+		ft_memcpy(buf + k, w->parts[i].text, ft_strlen(w->parts[i].text));
+		k += ft_strlen(w->parts[i].text);
 		i++;
 	}
 	buf[k] = '\0';
@@ -69,8 +52,8 @@ void	finalize_hdoc_flags(t_tokvec *tv)
 	i = 0;
 	while (i + 1 < tv->len)
 	{
-		if (tv->vector[i].token_kind == TK_HEREDOC
-			&& tv->vector[i + 1].token_kind == TK_WORD)
+		if (tv->vector[i].token_kind == TK_HEREDOC && tv->vector[i
+			+ 1].token_kind == TK_WORD)
 		{
 			tv->vector[i].hdoc_quoted = tv->vector[i + 1].word_info.had_quotes;
 			lim = join_parts_text(&tv->vector[i + 1].word_info);
@@ -106,4 +89,26 @@ int	syntax_check(const t_tokvec *tv)
 		i++;
 	}
 	return (TOK_OK);
+}
+
+void	finalize_word_args(t_tokvec *tv)
+{
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	while (i < tv->len)
+	{
+		if (tv->vector[i].token_kind == TK_WORD)
+		{
+			str = join_parts_text(&tv->vector[i].word_info);
+			if (str)
+			{
+				if (tv->vector[i].args)
+					free(tv->vector[i].args);
+				tv->vector[i].args = str;
+			}
+		}
+		i++;
+	}
 }
