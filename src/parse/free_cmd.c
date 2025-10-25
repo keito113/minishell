@@ -6,37 +6,67 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:15:56 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/14 15:18:19 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 19:37:31 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_cmd(t_cmd *cmd)
+static void	free_cmd_word_infos(t_cmd *cmd)
 {
-	t_redir	*next;
 	size_t	i;
 
+	if (!cmd->word_infos)
+		return ;
+	i = 0;
+	while (i < cmd->argc)
+	{
+		free_wordinfo_dup(cmd->word_infos[i]);
+		i++;
+	}
+	free(cmd->word_infos);
+	cmd->word_infos = NULL;
+	cmd->argc = 0;
+}
+
+static void	free_redirs(t_redir **head)
+{
+	t_redir	*next;
+
+	while (*head)
+	{
+		next = (*head)->next;
+		if ((*head)->word_info)
+			free_wordinfo_dup((*head)->word_info);
+		free((*head)->arg);
+		free(*head);
+		*head = next;
+	}
+}
+
+static void	free_argv(char **argv)
+{
+	size_t	i;
+
+	if (!argv)
+		return ;
+	i = 0;
+	while (argv[i])
+	{
+		free(argv[i]);
+		i++;
+	}
+	free(argv);
+}
+
+void	free_cmd(t_cmd *cmd)
+{
 	if (!cmd)
 		return ;
-	if (cmd->argv)
-	{
-		i = 0;
-		while (cmd->argv[i])
-		{
-			free(cmd->argv[i]);
-			i++;
-		}
-		free(cmd->argv);
-		cmd->argv = NULL;
-	}
-	while (cmd->redirs)
-	{
-		next = cmd->redirs->next;
-		free(cmd->redirs->arg);
-		free(cmd->redirs);
-		cmd->redirs = next;
-	}
+	free_argv(cmd->argv);
+	cmd->argv = NULL;
+	free_cmd_word_infos(cmd);
+	free_redirs(&cmd->redirs);
 }
 
 t_ast	*parse_command_fail(t_cmd *cmd)

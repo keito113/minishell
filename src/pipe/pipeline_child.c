@@ -6,13 +6,13 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:21:40 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/03 18:57:38 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/24 14:59:38 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	pipe_ctx_child_wire_stdio(const t_pipe_ctx *ctx)
+static void	pipe_ctx_attach_child_stdio(const t_pipe_ctx *ctx)
 {
 	if (ctx->prev_read != -1)
 	{
@@ -40,8 +40,8 @@ static void	pipe_ctx_child_close_unused(const t_pipe_ctx *ctx)
 void	run_pipeline_child(t_pipe_ctx *pipe_ctx, t_cmd **pipeline_cmds,
 		size_t i, t_shell *sh)
 {
-	pipe_ctx_child_wire_stdio(pipe_ctx);   // STDIN/STDOUT をパイプに接続
-	pipe_ctx_child_close_unused(pipe_ctx); // 子で不要端を閉じる
+	pipe_ctx_attach_child_stdio(pipe_ctx);
+	pipe_ctx_child_close_unused(pipe_ctx);
 	if (apply_redirs(pipeline_cmds[i]) < 0)
 		exit(1);
 	// if (pipeline_cmds[i]->is_builtin)
@@ -49,8 +49,5 @@ void	run_pipeline_child(t_pipe_ctx *pipe_ctx, t_cmd **pipeline_cmds,
 	// 	int st = run_builtin(pipeline_cmds[i], sh);
 	// 	exit(st & 0xFF);
 	// }
-	exec_external(pipeline_cmds[i]->argv, sh->envp);
-	if (errno == ENOENT)
-		exit(127);
-	exit(126);
+	exec_external(pipeline_cmds[i]->argv, sh);
 }

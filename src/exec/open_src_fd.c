@@ -6,12 +6,11 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:37:54 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/04 14:38:08 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 19:52:53 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"minishell.h"
-
+#include "minishell.h"
 
 static int	open_file_with_mode(const char *path, int flags, int mode)
 {
