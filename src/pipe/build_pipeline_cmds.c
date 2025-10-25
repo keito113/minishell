@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:48:41 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/04 13:35:02 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 19:47:25 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static void	flatten_pipeline(const t_ast *node, t_cmd **pipeline_cmds,
 		pipeline_cmds[(*index)++] = (t_cmd *)&node->as.cmd;
 }
 
-int	build_pipeline_cmds(const t_ast *root, t_cmd ***out_seq,
-		size_t *out_n, t_shell *sh)
+int	build_pipeline_cmds(const t_ast *root, t_cmd ***out_seq, size_t *out_n,
+		t_shell *sh)
 {
-	size_t count_cmds;
-	size_t index;
-	t_cmd **pipeline_cmds;
+	size_t	count_cmds;
+	size_t	index;
+	t_cmd	**pipeline_cmds;
 
 	*out_seq = NULL;
 	*out_n = 0;

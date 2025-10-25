@@ -3,98 +3,145 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/21 12:46:14 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/24 16:24:12 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/input.h" // ms_input_init, ms_readline
-#include "minishell.h"     // t_shell, t_ast, make_ast, free_ast
+#include "include/input.h"
+#include "include/minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-// 変数1個
-static void	dump_redirs(const t_redir *r)
-{
-	const char	*k;
+// static const char	*quote_to_str(t_quote_kind q)
+// {
+// 	if (q == SINGLE)
+// 		return ("SINGLE");
+// 	if (q == DOUBLE)
+// 		return ("DOUBLE");
+// 	return ("NONE");
+// }
 
-	while (r)
+// static void	dump_wordinfo(const t_wordinfo *info, int depth)
+// {
+// 	size_t	k;
+// 	int		i;
+
+// 	if (!info)
+// 	{
+// 		for (i = 0; i < depth; i++)
+// 			putchar(' ');
+// 		puts("(no word info)");
+// 		return ;
+// 	}
+// 	for (i = 0; i < depth; i++)
+// 		putchar(' ');
+// 	printf("had_quotes=%d had_dollar=%d parts=%zu\n", info->had_quotes,
+// 		info->had_dollar, info->parts_count);
+// 	k = 0;
+// 	while (k < info->parts_count)
+// 	{
+// 		for (i = 0; i < depth; i++)
+// 			putchar(' ');
+// 		printf("  part[%zu] quote=%s text=\"%s\"\n", k,
+// 			quote_to_str(info->parts[k].quote),
+// 			info->parts[k].text ? info->parts[k].text : "");
+// 		k++;
+// 	}
+// }
+
+// static void	dump_redirs(const t_redir *r)
+// {
+// 	const char	*k;
+
+// 	while (r)
+// 	{
+// 		k = (r->kind == R_IN) ? "<" : (r->kind == R_OUT) ? ">" : (r->kind == R_APP) ? ">>" : "<<";
+// 		printf("  redir: %s arg=\"%s\" fd=%d quoted=%d\n", k,
+// 			r->arg ? r->arg : "", r->fd_target, r->here_doc_quoted);
+// 		if (r->word_info)
+// 			dump_wordinfo(r->word_info, 4);
+// 		r = r->next;
+// 	}
+// }
+
+// static void	dump_ast(const t_ast *n, int depth)
+// {
+// 	int		i;
+// 	size_t	j;
+
+// 	if (!n)
+// 		return ;
+// 	for (i = 0; i < depth; i++)
+// 		putchar(' ');
+// 	if (n->type == AST_PIPE)
+// 	{
+// 		puts("[PIPE]");
+// 		dump_ast(n->as.pipe.left, depth + 2);
+// 		dump_ast(n->as.pipe.right, depth + 2);
+// 	}
+// 	else
+// 	{
+// 		puts("[CMD]");
+// 		if (n->as.cmd.argv)
+// 		{
+// 			j = 0;
+// 			while (n->as.cmd.argv[j])
+// 			{
+// 				for (i = 0; i < depth + 2; i++)
+// 					putchar(' ');
+// 				printf("argv[%zu]=\"%s\"\n", j, n->as.cmd.argv[j]);
+// 				if (n->as.cmd.word_infos)
+// 					dump_wordinfo(n->as.cmd.word_infos[j], depth + 4);
+// 				j++;
+// 			}
+// 		}
+// 		dump_redirs(n->as.cmd.redirs);
+// 	}
+// }
+
+static int	tokenize_line(const char *line, t_tokvec *out, int *err)
+{
+	int	local_err;
+
+	if (!line || !out)
+		return (-1);
+	tokvec_init(out);
+	local_err = 0;
+	if (tok_lex_line(line, out, &local_err) < 0)
 	{
-		k = (r->kind == R_IN) ? "<" : (r->kind == R_OUT) ? ">" : (r->kind == R_APP) ? ">>" : "<<";
-		printf("  redir: %s arg=\"%s\" fd=%d quoted=%d\n", k,
-			r->arg ? r->arg : "", r->fd_target, r->quoted);
-		r = r->next;
+		fprintf(stderr, "[LEX_ERR] code=%d\n", local_err);
+		tokvec_free(out);
+		if (err)
+			*err = local_err;
+		return (-1);
 	}
+	finalize_hdoc_flags(out);
+	finalize_word_args(out);
+	if (err)
+		*err = local_err;
+	return (0);
 }
 
-// 変数2個
-static void	dump_ast(const t_ast *n, int depth)
+int	main(int argc, char **argv, char **envp)
 {
-	int		i;
-	size_t	j;
-
-	if (!n)
-		return ;
-	for (i = 0; i < depth; i++)
-		putchar(' ');
-	if (n->type == AST_PIPE)
-	{
-		puts("[PIPE]");
-		dump_ast(n->as.pipe.left, depth + 2);
-		dump_ast(n->as.pipe.right, depth + 2);
-	}
-	else
-	{
-		puts("[CMD]");
-		if (n->as.cmd.argv)
-		{
-			j = 0;
-			while (n->as.cmd.argv[j])
-			{
-				for (i = 0; i < depth + 2; i++)
-					putchar(' ');
-				printf("argv[%zu]=\"%s\"\n", j, n->as.cmd.argv[j]);
-				j++;
-			}
-		}
-		dump_redirs(n->as.cmd.redirs);
-	}
-}
-
-// 変数3個
-static t_ast	*lex_post_parse(const char *line, t_shell *sh)
-{
-	t_tokvec	tv;
-	int			err;
+	t_shell		sh;
+	char		*line;
 	t_ast		*root;
+	t_tokvec	token_vec;
 
-	tokvec_init(&tv);
-	err = 0;
-	if (tok_lex_line(line, &tv, &err) < 0)
-	{
-		fprintf(stderr, "[LEX_ERR] code=%d\n", err);
-		tokvec_free(&tv);
-		return (NULL);
-	}
-	// tokens の事後処理（HEREDOC の quoted/limiter と、全 WORD の args 生成）
-	finalize_hdoc_flags(&tv);
-	finalize_word_args(&tv);
-	// 構文は parse 側の precheck_syntax で判定される
-	root = make_ast(&tv, sh);
-	tokvec_free(&tv);
-	return (root);
-}
-
-// 変数3個
-int	main(void)
-{
-	t_shell	sh;
-	char	*line;
-	t_ast	*root;
-
+	(void)argc;
+	(void)argv;
 	sh = (t_shell){0};
+	if (env_init_from_envp(&sh.env, envp) < 0)
+	{
+		free_env_list(&sh.env);
+		return (1);
+	}
+	sh.envp = envp;
+	sh.last_status = 0;
 	ms_input_init();
 	while (1)
 	{
@@ -108,13 +155,25 @@ int	main(void)
 		{
 			free(line);
 			continue ;
-		} // Ctrl-C 空行
-		root = lex_post_parse(line, &sh);
+		}
+		if (tokenize_line(line, &token_vec, NULL) != 0)
+		{
+			free(line);
+			continue ;
+		}
+		root = parse(&token_vec, &sh);
 		free(line);
 		if (!root)
 			continue ;
-		dump_ast(root, 0);
+		if (expand(root, &sh) < 0)
+		{
+			free_ast(root);
+			continue ;
+		}
+		exec_entry(root, &sh);
+		// dump_ast(root, 0);
 		free_ast(root);
 	}
+	free_env_list(&sh.env);
 	return (0);
 }

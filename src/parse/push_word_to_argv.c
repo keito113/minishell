@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 14:02:11 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/14 14:49:40 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:40:17 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,7 @@ int	push_word_to_argv(t_cmd *cmd, const t_token *token)
 		free(word);
 		return (-1);
 	}
+	if (push_word_info(cmd, token) != 0)
+		return (-1);
 	return (0);
 }
