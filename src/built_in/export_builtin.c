@@ -1,31 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_ast.c                                         :+:      :+:    :+:   */
+/*   export_builtin.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/14 14:47:28 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 16:02:30 by takawagu         ###   ########.fr       */
+/*   Created: 2025/10/24 16:37:12 by takawagu          #+#    #+#             */
+/*   Updated: 2025/10/24 17:28:56 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_ast(t_ast *node)
+int	builtin_export(char **argv, t_env **penv)
 {
-	if (!node)
-		return ;
-	if (node->type == AST_PIPE)
+	int	i;
+	int	status;
+
+	status = 0;
+	if (argv[1] == NULL)
 	{
-		free_ast(node->as.pipe.left);
-		free_ast(node->as.pipe.right);
-		free(node);
-		return ;
+		print_export_sorted(*penv);
+		return (0);
 	}
-	else
+	i = 1;
+	while (argv[i] != NULL)
 	{
-		free_cmd(&node->as.cmd);
-		free(node);
+		if (handle_export_arg(argv[i], penv) != 0)
+			status = 1;
+		i++;
 	}
+	return (status);
 }

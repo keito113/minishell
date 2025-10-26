@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:47 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/04 14:05:48 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 18:09:42 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,23 +49,19 @@ static void	free_split(char **arr)
 	free(arr);
 }
 
-char	*find_cmd_path(const char *cmd, char *const *envp)
+char	*find_cmd_path(const char *cmd, t_shell *sh)
 {
-	int		i;
-	char	*path_env;
-	char	**paths;
-	char	*result;
+	const char	*path_env;
+	char		**paths;
+	char		*result;
 
-	i = 0;
 	if (!cmd || *cmd == '\0')
 		return (NULL);
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-	if (!envp[i])
+	path_env = lookup_env("PATH", sh);
+	if (!path_env || *path_env == '\0')
 		return (NULL);
-	path_env = envp[i] + 5;
 	paths = ft_split(path_env, ':');
 	if (!paths)
 		return (NULL);

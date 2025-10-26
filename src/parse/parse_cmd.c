@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 18:51:03 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/14 15:23:34 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/22 16:33:57 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,13 @@ static int	handle_word(t_cmd *cmd, const t_token *token, size_t *idx)
 static int	handle_redir(t_cmd *cmd, const t_token *token, size_t len,
 		size_t *idx)
 {
+	int	fd;
+
 	if (*idx + 1 >= len || token[*idx + 1].token_kind != TK_WORD)
 		return (-1);
+	fd = token[*idx].fd_left;
+	if (is_invalid_fd(fd))
+		return (report_bad_fd(fd));
 	if (push_redir(cmd, &token[*idx], &token[*idx + 1]) != 0)
 		return (-1);
 	*idx += 2;
