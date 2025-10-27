@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 14:35:26 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/26 14:37:31 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:48:18 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,60 +23,53 @@ t_env	*env_find(t_env *head, const char *key)
 	return (NULL);
 }
 
+char	*dup_or_empty(const char *value)
+{
+	if (value == NULL)
+		return (ft_strdup(""));
+	return (ft_strdup(value));
+}
+
+static t_env	*env_create_node(const char *key, char *dup_val, int exported)
+{
+	t_env	*new_node;
+	char	*dup_key;
+
+	dup_key = ft_strdup(key);
+	if (dup_key == NULL)
+		return (free(dup_val), NULL);
+	new_node = malloc(sizeof(*new_node));
+	if (new_node == NULL)
+		return (free(dup_key), free(dup_val), NULL);
+	new_node->key = dup_key;
+	new_node->val = dup_val;
+	new_node->exported = exported;
+	new_node->next = NULL;
+	return (new_node);
+}
+
 int	env_set(t_env **head, const char *key, const char *value, int exported)
 {
 	t_env	*node;
 	t_env	*new_node;
-	char	*dup_key;
 	char	*dup_val;
-	const char *safe_val = value ? value : "";
 
-	if (!head || !key)
+	if (head == NULL || key == NULL)
 		return (-1);
 	node = env_find(*head, key);
-	dup_val = ft_strdup(safe_val);
-	if (!dup_val)
+	dup_val = dup_or_empty(value);
+	if (dup_val == NULL)
 		return (-1);
-	if (node)
+	if (node != NULL)
 	{
 		free(node->val);
 		node->val = dup_val;
 		node->exported = exported;
 		return (0);
 	}
-	dup_key = ft_strdup(key);
-	new_node = malloc(sizeof(*new_node));
-	if (!dup_key || !new_node)
-		return (free(dup_key), free(dup_val), free(new_node), -1);
-	new_node->key = dup_key;
-	new_node->val = dup_val;
-	new_node->exported = exported;
-	new_node->next = *head;
-	*head = new_node;
+	new_node = env_create_node(key, dup_val, exported);
+	if (new_node == NULL)
+		return (-1);
+	env_list_append_node(head, new_node);
 	return (0);
 }
-
-int	env_append(t_env **head, const char *key, const char *suffix)
-{
-	t_env	*node;
-	char	*merged;
-	const char *safe_suffix = suffix ? suffix : "";
-
-	if (!head || !key)
-		return (-1);
-	node = env_find(*head, key);
-	if (!node)
-		return (env_set(head, key, safe_suffix, 1));
-	if (!node->val)
-		node->val = ft_strdup("");
-	merged = ft_strjoin(node->val, safe_suffix);
-	if (!merged)
-		return (-1);
-	free(node->val);
-	node->val = merged;
-	node->exported = 1;
-	return (0);
-}
-
-
-

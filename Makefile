@@ -50,7 +50,7 @@
 # =========================
 #  Minishell AST demo build
 # =========================
-NAME        := ms_ast_demo
+NAME        := minishell
 CC          := cc
 CFLAGS      := -Wall -Wextra -Werror -g
 

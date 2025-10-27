@@ -6,13 +6,13 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 17:03:10 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/24 17:40:13 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 15:02:21 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_valid_identifier(const char *s)
+int	is_valid_identifier(const char *s)
 {
 	size_t	i;
 
@@ -33,27 +33,37 @@ static int	is_valid_identifier(const char *s)
 static int	parse_assign(const char *arg, char **key, char **val,
 		int *is_append)
 {
-	const char	*p;
-	size_t		klen;
+	const char	*assign_pos;
+	size_t		key_len;
 
 	*is_append = 0;
 	*val = NULL;
-	p = ft_strchr(arg, '=');
-	if (p == NULL)
+	assign_pos = ft_strchr(arg, '=');
+	if (assign_pos == NULL)
 	{
 		*key = ft_strdup(arg);
 		return (*key != NULL);
 	}
-	klen = (size_t)(p - arg);
-	if (klen >= 1 && arg[klen - 1] == '+')
+	key_len = (size_t)(assign_pos - arg);
+	if (key_len >= 1 && arg[key_len - 1] == '+')
 	{
 		*is_append = 1;
-		klen -= 1;
+		key_len -= 1;
 	}
-	*key = ft_substr(arg, 0, (unsigned int)klen);
-	*val = ft_strdup(p + 1);
+	*key = ft_substr(arg, 0, (unsigned int)key_len);
+	*val = ft_strdup(assign_pos + 1);
 	if (*key == NULL || *val == NULL)
 		return (free(*key), free(*val), 0);
+	return (1);
+}
+
+static int	report_invalid_identifier(char *arg, char *key, char *val)
+{
+	write(2, "minishell: export: `", 21);
+	write(2, arg, ft_strlen(arg));
+	write(2, "': not a valid identifier\n", 26);
+	free(key);
+	free(val);
 	return (1);
 }
 
@@ -62,30 +72,23 @@ int	handle_export_arg(char *arg, t_env **penv)
 	char	*key;
 	char	*val;
 	int		is_append;
-	t_env	*e;
+	t_env	*env;
 
 	key = NULL;
 	val = NULL;
 	is_append = 0;
 	if (!parse_assign(arg, &key, &val, &is_append) || !is_valid_identifier(key))
-	{
-		write(2, "minishell: export: `", 21);
-		write(2, arg, ft_strlen(arg));
-		write(2, "': not a valid identifier\n", 26);
-		free(key);
-		free(val);
-		return (1);
-	}
+		return (report_invalid_identifier(arg, key, val));
 	if (val == NULL)
 	{
-		e = env_find(*penv, key);
-		if (e)
-			e->exported = 1;
+		env = env_find(*penv, key);
+		if (env)
+			env->exported = 1;
 		else
 			env_set(penv, key, "", 1);
 	}
 	else if (is_append)
-		env_append(penv, key, val);
+		env_append_value(penv, key, val);
 	else
 		env_set(penv, key, val, 1);
 	free(key);

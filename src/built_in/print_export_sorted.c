@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 16:39:14 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/26 14:31:03 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 11:09:13 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,35 +42,29 @@ static void	fill_exported(const t_env *env, const t_env **arr)
 	}
 }
 
-static void	swap_envptr(const t_env **a, const t_env **b)
-{
-	const t_env	*tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
 static void	sort_exported(const t_env **arr, int n)
 {
-	int	base_index;
-	int	compare_index;
+	int			base_index;
+	int			compare_index;
+	const t_env	*tmp;
 
 	base_index = 0;
 	while (base_index < n)
 	{
-		compare_index= base_index + 1;
+		compare_index = base_index + 1;
 		while (compare_index < n)
 		{
 			if (ft_strcmp(arr[base_index]->key, arr[compare_index]->key) > 0)
-				swap_envptr(&arr[base_index], &arr[compare_index]);
+			{
+				tmp = arr[base_index];
+				arr[base_index] = arr[compare_index];
+				arr[compare_index] = tmp;
+			}
 			compare_index++;
 		}
 		base_index++;
 	}
 }
-
-
 
 static void	print_one_decl(const char *key, const char *value)
 {

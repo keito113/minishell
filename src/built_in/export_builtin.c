@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 16:37:12 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/24 17:28:56 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 15:10:03 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	builtin_export(char **argv, t_env **penv)
 {
-	int	i;
+	int	index;
 	int	status;
 
 	status = 0;
@@ -23,12 +23,12 @@ int	builtin_export(char **argv, t_env **penv)
 		print_export_sorted(*penv);
 		return (0);
 	}
-	i = 1;
-	while (argv[i] != NULL)
+	index = 1;
+	while (argv[index] != NULL)
 	{
-		if (handle_export_arg(argv[i], penv) != 0)
-			status = 1;
-		i++;
+		if (handle_export_arg(argv[index], penv) != 0)
+			return (-1);
+		index++;
 	}
 	return (status);
 }
