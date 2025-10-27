@@ -250,4 +250,9 @@ int							builtin_export(char **argv, t_env **penv);
 int							handle_export_arg(char *arg, t_env **penv);
 void						print_export_sorted(const t_env *env);
 
+//env
+t_env	*env_find(t_env *head, const char *key);
+int		env_set(t_env **head, const char *key, const char *value, int exported);
+int		env_append(t_env **head, const char *key, const char *suffix);
+
 #endif
