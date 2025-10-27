@@ -173,6 +173,7 @@ int							push_word_to_argv(t_cmd *cmd, const t_token *token);
 int							push_redir(t_cmd *cmd, const t_token *op_tok,
 								const t_token *word_tok);
 void						free_cmd(t_cmd *cmd);
+void						free_argv(char **argv);
 t_ast						*parse_command_fail(t_cmd *cmd);
 int							syntax_fail(const t_token *tok, t_shell *sh);
 void						free_ast(t_ast *node);
@@ -197,8 +198,6 @@ char						*join_and_free(char *left, const char *right);
 char						*join_num_and_free(char *left, int n);
 int							is_valid_var_head(char c);
 size_t						var_length(const char *str);
-int							env_init_from_envp(t_env **head, char **envp);
-void						free_env_list(t_env **head);
 
 // exec
 int							exec_entry(t_ast *root, t_shell *sh);
@@ -246,13 +245,29 @@ void						cmd_not_found_exit(const char *cmd);
 void						permission_denied_exit(const char *target);
 
 // builtin
+int							is_builtin_name(const char *name);
 int							builtin_export(char **argv, t_env **penv);
 int							handle_export_arg(char *arg, t_env **penv);
 void						print_export_sorted(const t_env *env);
+int							builtin_env(char **argv, t_env **env);
 
-//env
-t_env	*env_find(t_env *head, const char *key);
-int		env_set(t_env **head, const char *key, const char *value, int exported);
-int		env_append(t_env **head, const char *key, const char *suffix);
+// env
+t_env						*env_find(t_env *head, const char *key);
+int							env_set(t_env **head, const char *key,
+								const char *value, int exported);
+int							env_append_value(t_env **head, const char *key,
+								const char *suffix);
+char						*dup_or_empty(const char *value);
+int							env_init_from_envp(t_env **head, char **envp);
+void						free_env_list(t_env **head);
+void						env_list_append_node(t_env **head, t_env *node);
+
+// builtin
+int							exec_builtin(t_cmd *cmd, t_env **penv);
+int							builtin_export(char **argv, t_env **penv);
+int							builtin_env(char **argv, t_env **env);
+int							builtin_pwd(char **argv);
+int							builtin_unset(char **argv, t_env **penv);
+int							is_valid_identifier(const char *s);
 
 #endif

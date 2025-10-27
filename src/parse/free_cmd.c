@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 18:15:56 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 19:37:31 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 11:39:45 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	free_redirs(t_redir **head)
 	}
 }
 
-static void	free_argv(char **argv)
+void	free_argv(char **argv)
 {
 	size_t	i;
 

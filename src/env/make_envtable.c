@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 16:15:23 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 17:37:08 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:47:30 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,28 +55,42 @@ static char	*ft_strndup(const char *str, size_t n)
 	return (dup);
 }
 
+void	env_list_append_node(t_env **head, t_env *node)
+{
+	t_env	*tail;
+
+	if (node == NULL || head == NULL)
+		return ;
+	if (*head == NULL)
+	{
+		*head = node;
+		return ;
+	}
+	tail = *head;
+	while (tail->next != NULL)
+		tail = tail->next;
+	tail->next = node;
+}
+
 static int	env_push_pair(t_env **head, const char *key, const char *value)
 {
 	t_env		*env;
-	const char	*value_src = value;
+	const char	*value_src;
 
 	env = malloc(sizeof(*env));
-	if (!env)
+	if (env == NULL)
 		return (-1);
 	env->key = ft_strdup(key);
-	if (value_src == NULL)
+	if (value != NULL)
+		value_src = value;
+	else
 		value_src = "";
 	env->val = ft_strdup(value_src);
-	if (!env->key || !env->val)
-	{
-		free(env->key);
-		free(env->val);
-		free(env);
-		return (-1);
-	}
+	if (env->key == NULL || env->val == NULL)
+		return (free(env->key), free(env->val), free(env), -1);
 	env->exported = 1;
-	env->next = *head;
-	*head = env;
+	env->next = NULL;
+	env_list_append_node(head, env);
 	return (0);
 }
 

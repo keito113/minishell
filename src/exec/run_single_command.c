@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/24 14:58:29 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/27 15:23:04 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,11 @@ int	run_single_command(t_cmd *cmd, t_shell *sh)
 		return (sh->last_status = 1);
 	if (prepare_cmd_heredocs(cmd, sh, NULL) != 0)
 		return (close_hdocs_in_cmd(cmd), sh->last_status);
-	// if (cmd->is_builtin)
-	// {
-	// 	// 親でビルトイン実行して sh->last_status を設定
-	// 	//未実装
-	// 	close_hdocs_in_cmd(cmd);
-	// 	return (sh->last_status = 1);
-	// }
+	if (cmd->is_builtin)
+	{
+		close_hdocs_in_cmd(cmd);
+		return (sh->last_status = exec_builtin(cmd, &sh->env));
+	}
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), close_hdocs_in_cmd(cmd), sh->last_status = 1);
