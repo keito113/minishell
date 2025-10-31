@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 16:37:12 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 15:10:03 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/31 12:11:47 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_export(char **argv, t_env **penv)
 	while (argv[index] != NULL)
 	{
 		if (handle_export_arg(argv[index], penv) != 0)
-			return (-1);
+			status = 1;
 		index++;
 	}
 	return (status);
