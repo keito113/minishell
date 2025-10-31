@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_buiitin_name.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 11:44:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 14:49:03 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/29 08:48:58 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	is_builtin_name(const char *name)
 		return (1);
 	if (ft_strcmp(name, "env") == 0)
 		return (1);
-	// if (ft_strcmp(name, "exit") == 0)
-	// 	return (1);
+	if (ft_strcmp(name, "exit") == 0)
+		return (1);
 	return (0);
 }

@@ -5,6 +5,7 @@
 # include "tokens.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -97,6 +98,7 @@ typedef struct s_redir
 	int here_doc_quoted; // heredoc limiter がクォートされていたか（展開抑制用）
 	int						fd_target;
 	int						hdoc_fd;
+	int						here_doc_quoted;
 	struct s_redir			*next;
 }							t_redir;
 
@@ -106,9 +108,11 @@ typedef struct s_cmd
 	char **argv; // 例: {"grep","foo",NULL}（展開・クォート除去後）
 	t_wordinfo				**word_infos;
 	size_t					argc;
+	char					**argv;
 	t_redir *redirs; // このコマンドのリダイレクト連結リスト
 	int is_builtin;  // 実行時の分岐に使うフラグ（0/1） or 別enum
-	int is_child;    //子プロセスの中かどうかの判定
+	int is_child;    // 子プロセスの中かどうかの判定
+	t_shell					*sh;
 }							t_cmd;
 
 // ASTノード本体
@@ -126,7 +130,7 @@ typedef struct s_ast
 	} as;
 }							t_ast;
 
-//環境変数のテーブル
+// 環境変数のテーブル
 typedef struct s_env
 {
 	char *key;    // malloc所有
@@ -143,6 +147,8 @@ typedef struct s_shell
 	int interactive; // 対話モードか
 	t_env					*env;
 	// 必要なら: sigフラグや一時fdの退避など
+	int						should_exit;
+	int						exit_status;
 }							t_shell;
 
 // parse用の構造体
@@ -216,6 +222,16 @@ void						close_all_prepared_hdocs(t_ast *node);
 void						close_hdocs_in_cmd(t_cmd *cmd);
 void						close_all_prepared_hdocs(t_ast *node);
 
+// heredoc
+void						close_hdocs_in_cmd(t_cmd *cmd);
+void						close_all_prepared_hdocs(t_ast *node);
+int							prepare_cmd_heredocs(t_cmd *cmd, t_shell *sh,
+								t_ast *node);
+int							prepare_heredocs(t_ast *node, t_shell *sh);
+int							heredoc_loop(int wfd, t_redir *r, t_shell *sh);
+int							read_heredoc_into_fd(int write_fd, t_redir *redir,
+								t_shell *sh);
+
 // pipe
 int							reap_pipeline_and_set_last_status(pid_t last_pid,
 								t_shell *sh);
@@ -269,5 +285,8 @@ int							builtin_env(char **argv, t_env **env);
 int							builtin_pwd(char **argv);
 int							builtin_unset(char **argv, t_env **penv);
 int							is_valid_identifier(const char *s);
+// exit
+int							str_to_ll_checked(const char *s, long long *out);
+int							builtin_exit(char **av, t_shell *sh, int is_child);
 
 #endif
