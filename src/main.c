@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/30 12:45:39 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/24 16:24:12 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,91 +16,91 @@
 #include <stdlib.h>
 
 // static const char	*quote_to_str(t_quote_kind q)
-//{
-//	if (q == SINGLE)
-//		return ("SINGLE");
-//	if (q == DOUBLE)
-//		return ("DOUBLE");
-//	return ("NONE");
+// {
+// 	if (q == SINGLE)
+// 		return ("SINGLE");
+// 	if (q == DOUBLE)
+// 		return ("DOUBLE");
+// 	return ("NONE");
 // }
 
 // static void	dump_wordinfo(const t_wordinfo *info, int depth)
-//{
-//	size_t	k;
-//	int		i;
+// {
+// 	size_t	k;
+// 	int		i;
 
-//	if (!info)
-//	{
-//		for (i = 0; i < depth; i++)
-//			putchar(' ');
-//		puts("(no word info)");
-//		return ;
-//	}
-//	for (i = 0; i < depth; i++)
-//		putchar(' ');
-//	printf("had_quotes=%d had_dollar=%d parts=%zu\n", info->had_quotes,
-//		info->had_dollar, info->parts_count);
-//	k = 0;
-//	while (k < info->parts_count)
-//	{
-//		for (i = 0; i < depth; i++)
-//			putchar(' ');
-//		printf("  part[%zu] quote=%s text=\"%s\"\n", k,
-//			quote_to_str(info->parts[k].quote),
-//			info->parts[k].text ? info->parts[k].text : "");
-//		k++;
-//	}
-//}
+// 	if (!info)
+// 	{
+// 		for (i = 0; i < depth; i++)
+// 			putchar(' ');
+// 		puts("(no word info)");
+// 		return ;
+// 	}
+// 	for (i = 0; i < depth; i++)
+// 		putchar(' ');
+// 	printf("had_quotes=%d had_dollar=%d parts=%zu\n", info->had_quotes,
+// 		info->had_dollar, info->parts_count);
+// 	k = 0;
+// 	while (k < info->parts_count)
+// 	{
+// 		for (i = 0; i < depth; i++)
+// 			putchar(' ');
+// 		printf("  part[%zu] quote=%s text=\"%s\"\n", k,
+// 			quote_to_str(info->parts[k].quote),
+// 			info->parts[k].text ? info->parts[k].text : "");
+// 		k++;
+// 	}
+// }
 
 // static void	dump_redirs(const t_redir *r)
-//{
-//	const char	*k;
+// {
+// 	const char	*k;
 
-//	while (r)
-//	{
-//		k = (r->kind == R_IN) ? "<" : (r->kind == R_OUT) ? ">" : (r->kind == R_APP) ? ">>" : "<<";
-//		printf("  redir: %s arg=\"%s\" fd=%d quoted=%d\n", k,
-//			r->arg ? r->arg : "", r->fd_target, r->here_doc_quoted);
-//		if (r->word_info)
-//			dump_wordinfo(r->word_info, 4);
-//		r = r->next;
-//	}
-//}
+// 	while (r)
+// 	{
+// 		k = (r->kind == R_IN) ? "<" : (r->kind == R_OUT) ? ">" : (r->kind == R_APP) ? ">>" : "<<";
+// 		printf("  redir: %s arg=\"%s\" fd=%d quoted=%d\n", k,
+// 			r->arg ? r->arg : "", r->fd_target, r->here_doc_quoted);
+// 		if (r->word_info)
+// 			dump_wordinfo(r->word_info, 4);
+// 		r = r->next;
+// 	}
+// }
 
 // static void	dump_ast(const t_ast *n, int depth)
-//{
-//	int		i;
-//	size_t	j;
+// {
+// 	int		i;
+// 	size_t	j;
 
-//	if (!n)
-//		return ;
-//	for (i = 0; i < depth; i++)
-//		putchar(' ');
-//	if (n->type == AST_PIPE)
-//	{
-//		puts("[PIPE]");
-//		dump_ast(n->as.pipe.left, depth + 2);
-//		dump_ast(n->as.pipe.right, depth + 2);
-//	}
-//	else
-//	{
-//		puts("[CMD]");
-//		if (n->as.cmd.argv)
-//		{
-//			j = 0;
-//			while (n->as.cmd.argv[j])
-//			{
-//				for (i = 0; i < depth + 2; i++)
-//					putchar(' ');
-//				printf("argv[%zu]=\"%s\"\n", j, n->as.cmd.argv[j]);
-//				if (n->as.cmd.word_infos)
-//					dump_wordinfo(n->as.cmd.word_infos[j], depth + 4);
-//				j++;
-//			}
-//		}
-//		dump_redirs(n->as.cmd.redirs);
-//	}
-//}
+// 	if (!n)
+// 		return ;
+// 	for (i = 0; i < depth; i++)
+// 		putchar(' ');
+// 	if (n->type == AST_PIPE)
+// 	{
+// 		puts("[PIPE]");
+// 		dump_ast(n->as.pipe.left, depth + 2);
+// 		dump_ast(n->as.pipe.right, depth + 2);
+// 	}
+// 	else
+// 	{
+// 		puts("[CMD]");
+// 		if (n->as.cmd.argv)
+// 		{
+// 			j = 0;
+// 			while (n->as.cmd.argv[j])
+// 			{
+// 				for (i = 0; i < depth + 2; i++)
+// 					putchar(' ');
+// 				printf("argv[%zu]=\"%s\"\n", j, n->as.cmd.argv[j]);
+// 				if (n->as.cmd.word_infos)
+// 					dump_wordinfo(n->as.cmd.word_infos[j], depth + 4);
+// 				j++;
+// 			}
+// 		}
+// 		dump_redirs(n->as.cmd.redirs);
+// 	}
+// }
 
 static int	tokenize_line(const char *line, t_tokvec *out, int *err)
 {

@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 17:03:10 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 15:02:21 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/10/29 16:47:19 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,38 @@ int	is_valid_identifier(const char *s)
 static int	parse_assign(const char *arg, char **key, char **val,
 		int *is_append)
 {
-	const char	*assign_pos;
+	const char	*eq;
 	size_t		key_len;
 
-	*is_append = 0;
+	*key = NULL;
 	*val = NULL;
-	assign_pos = ft_strchr(arg, '=');
-	if (assign_pos == NULL)
+	*is_append = 0;
+	eq = ft_strchr(arg, '=');
+	if (!eq)
 	{
 		*key = ft_strdup(arg);
 		return (*key != NULL);
 	}
-	key_len = (size_t)(assign_pos - arg);
+	key_len = (size_t)(eq - arg);
 	if (key_len >= 1 && arg[key_len - 1] == '+')
 	{
 		*is_append = 1;
-		key_len -= 1;
+		key_len--;
 	}
 	*key = ft_substr(arg, 0, (unsigned int)key_len);
-	*val = ft_strdup(assign_pos + 1);
-	if (*key == NULL || *val == NULL)
-		return (free(*key), free(*val), 0);
+	if (!*key || !is_valid_identifier(*key))
+		return (free(*key), *key = NULL, 0);
+	*val = ft_strdup(eq + 1);
+	if (!*val)
+		return (free(*key), *key = NULL, 0);
 	return (1);
 }
 
 static int	report_invalid_identifier(char *arg, char *key, char *val)
 {
-	write(2, "minishell: export: `", 21);
-	write(2, arg, ft_strlen(arg));
-	write(2, "': not a valid identifier\n", 26);
+	ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+	ft_putstr_fd(arg, STDERR_FILENO);
+	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 	free(key);
 	free(val);
 	return (1);
@@ -74,10 +77,7 @@ int	handle_export_arg(char *arg, t_env **penv)
 	int		is_append;
 	t_env	*env;
 
-	key = NULL;
-	val = NULL;
-	is_append = 0;
-	if (!parse_assign(arg, &key, &val, &is_append) || !is_valid_identifier(key))
+	if (!parse_assign(arg, &key, &val, &is_append))
 		return (report_invalid_identifier(arg, key, val));
 	if (val == NULL)
 	{
@@ -88,9 +88,12 @@ int	handle_export_arg(char *arg, t_env **penv)
 			env_set(penv, key, "", 1);
 	}
 	else if (is_append)
-		env_append_value(penv, key, val);
-	else
-		env_set(penv, key, val, 1);
+	{
+		if (env_append_value(penv, key, val) != 0)
+			return (free(key), free(val), 1);
+	}
+	else if (env_set(penv, key, val, 1) != 0)
+		return (free(key), free(val), 1);
 	free(key);
 	free(val);
 	return (0);

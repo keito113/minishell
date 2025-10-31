@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 13:48:27 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/29 08:49:50 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/10/29 14:48:35 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 
 extern volatile sig_atomic_t	g_sig;
 
-void							sig_setup_readline(void);
-void							sig_setup_parent_wait(void);
-void							sig_setup_child_exec(void);
+void sig_setup_readline(void);
+void sig_setup_parent_wait(void);
+void sig_setup_child_exec(void);
+
 
 #endif
