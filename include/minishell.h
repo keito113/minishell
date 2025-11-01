@@ -21,7 +21,7 @@
 #  define MINISHELL_FD_UPPER 1048576
 # endif
 
-//環境変数のテーブル
+// 環境変数のテーブル
 typedef struct s_env
 {
 	char *key;    // malloc所有
@@ -62,8 +62,8 @@ typedef struct s_cmd
 	size_t					argc;
 	t_redir *redirs; // このコマンドのリダイレクト連結リスト
 	int is_builtin;  // 実行時の分岐に使うフラグ（0/1） or 別enum
-	int is_child;    //子プロセスの中かどうかの判定
-	t_shell					sh;
+	int is_child;    // 子プロセスの中かどうかの判定
+	t_shell					*sh;
 }							t_cmd;
 
 // ASTノード本体
