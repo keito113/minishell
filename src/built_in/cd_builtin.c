@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 12:39:21 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 10:37:50 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:14:57 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,28 @@ static int	do_chdir(const char *path)
 	return (0);
 }
 
-int	builtin_cd(char **argv, t_env **env)
+static int	resolve_home_path(t_env **env, char **out_path)
 {
-	int			argc;
-	char		*path;
 	const t_env	*home_entry;
 	const char	*home;
+
+	home_entry = env_find(*env, "HOME");
+	if (home_entry != NULL)
+		home = home_entry->val;
+	else
+		home = NULL;
+	if (!home || !*home)
+	{
+		write(2, "minishell: cd: HOME not set\n", 28);
+		return (1);
+	}
+	*out_path = (char *)home;
+	return (0);
+}
+
+static int	resolve_cd_target(char **argv, t_env **env, char **out_path)
+{
+	int	argc;
 
 	argc = 0;
 	while (argv[argc])
@@ -67,21 +83,17 @@ int	builtin_cd(char **argv, t_env **env)
 		return (1);
 	}
 	if (argc == 1)
-	{
-		home_entry = env_find(*env, "HOME");
-		if (home_entry != NULL)
-			home = home_entry->val;
-		else
-			home = NULL;
-		if (!home || !*home)
-		{
-			write(2, "minishell: cd: HOME not set\n", 28);
-			return (1);
-		}
-		path = (char *)home;
-	}
-	else
-		path = argv[1];
+		return (resolve_home_path(env, out_path));
+	*out_path = argv[1];
+	return (0);
+}
+
+int	builtin_cd(char **argv, t_env **env)
+{
+	char	*path;
+
+	if (resolve_cd_target(argv, env, &path) != 0)
+		return (1);
 	if (do_chdir(path) != 0)
 		return (1);
 	if (update_pwd_vars(env) < 0)
@@ -91,3 +103,4 @@ int	builtin_cd(char **argv, t_env **env)
 	}
 	return (0);
 }
+

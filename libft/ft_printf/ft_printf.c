@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 16:49:54 by takawagu          #+#    #+#             */
-/*   Updated: 2025/05/24 16:16:01 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:33:35 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_printf(const char *format, ...)
 	va_start(args, format);
 	while (format[i])
 	{
-		tmp = handle_format(format, args, &i);
+		tmp = handle_format(format, &args, &i);
 		if (tmp < 0)
 		{
 			va_end(args);
