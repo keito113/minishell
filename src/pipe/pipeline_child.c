@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:21:40 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 14:33:26 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:37:51 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "signals.h"
 
 static void	pipe_ctx_attach_child_stdio(const t_pipe_ctx *ctx)
 {
@@ -52,6 +53,7 @@ void	run_pipeline_child(t_pipe_ctx *pipe_ctx, t_cmd **pipeline_cmds,
 {
 	int	st;
 
+	sig_setup_child_exec();
 	pipe_ctx_attach_child_stdio(pipe_ctx);
 	pipe_ctx_child_close_unused(pipe_ctx);
 	if (apply_redirs(pipeline_cmds[i]) < 0)
@@ -62,4 +64,5 @@ void	run_pipeline_child(t_pipe_ctx *pipe_ctx, t_cmd **pipeline_cmds,
 		exit(st);
 	}
 	exec_external(pipeline_cmds[i]->argv, sh);
+	exit(127);
 }

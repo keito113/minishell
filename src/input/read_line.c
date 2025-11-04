@@ -6,11 +6,11 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 12:07:15 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/07 12:46:22 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 07:31:10 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/input.h"
+#include "input.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
@@ -39,17 +39,19 @@ char	*ms_readline(const char *ps1)
 	const char	*prompt;
 	char		*line;
 
-	if (!ps1)
-		prompt = "minishell$ ";
-	else
+	prompt = "minishell$ ";
+	if (ps1)
 		prompt = ps1;
 	line = readline(prompt);
-	if (!line)
+	if (line == NULL)
+	{
+		if (g_sig)
+			return (ft_strdup(""));
 		return (NULL);
+	}
 	if (g_sig)
 	{
 		free(line);
-		g_sig = 0;
 		return (ft_strdup(""));
 	}
 	if (has_non_space_tab(line))

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   run_pipeline.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:24:15 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/24 14:40:47 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:48:22 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "signals.h"
 
 static int	setup_pipeline_exec(const t_ast *root, t_cmd ***out_seq,
 		size_t *out_n, t_shell *sh)
@@ -73,11 +74,16 @@ int	run_pipeline(const t_ast *root, t_shell *sh)
 	if (setup_pipeline_exec(root, &pipe_cmds, &n, sh) != 0)
 		return (sh->last_status);
 	pipe_ctx_init(&pipe_ctx);
+	sig_setup_parent_wait();
 	if (run_pipeline_loop(pipe_cmds, n, &pipe_ctx, sh) != 0)
+	{
+		sig_setup_readline();
 		return (sh->last_status);
+	}
 	close_hdocs_in_pipeline(pipe_cmds, n);
 	if (reap_pipeline_and_set_last_status(pipe_ctx.last_pid, sh) < 0)
 		sh->last_status = 1;
+	sig_setup_readline();
 	free(pipe_cmds);
 	return (sh->last_status);
 }

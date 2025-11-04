@@ -6,13 +6,13 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 12:50:38 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/07 15:37:12 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 08:28:56 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
-volatile sig_atomic_t	g_sig;
+volatile sig_atomic_t g_sig; // mainに置く
 
 // REPL（readline呼び出し中）にCtrl-C（SIGINT）が来たら、
 //フラグを立てる（g_sig = 1）
@@ -26,6 +26,18 @@ static void	handler_int_rl(int sig)
 	write(1, "\n", 1);
 }
 
+static int	rl_sigint_hook(void)
+{
+	if (g_sig)
+	{
+		g_sig = 0;
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	return (0);
+}
+
 // readlineによるプロンプト待ちの最中に
 // SIGINT（Ctrl-C）：REPL専用ハンドラ handler_int_rl を使い、readlineをEINTRで中断させる
 // SIGQUIT（Ctrl-\）：無視にする（Bash体感に寄せる）
@@ -35,8 +47,10 @@ void	sig_setup_readline(void)
 	struct sigaction	sa;
 	struct sigaction	ign;
 
+	rl_catch_signals = 0;
+	rl_event_hook = rl_sigint_hook;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
+	sa.sa_flags = SA_RESTART;
 	sa.sa_handler = handler_int_rl;
 	sigaction(SIGINT, &sa, NULL);
 	sigemptyset(&ign.sa_mask);

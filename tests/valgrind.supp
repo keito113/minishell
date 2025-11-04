@@ -1,0 +1,32 @@
+# ---- readline/history/ncurses を丸ごと除外（許容リーク） ----
+{
+  readline-reachable
+  Memcheck:Leak
+  match-leak-kinds: reachable
+  obj:*/libreadline.so*
+}
+{
+  readline-possible
+  Memcheck:Leak
+  match-leak-kinds: possible
+  obj:*/libreadline.so*
+}
+{
+  history-any
+  Memcheck:Leak
+  match-leak-kinds: reachable,possible,definite,indirect
+  obj:*/libhistory.so*
+}
+{
+  ncurses-any
+  Memcheck:Leak
+  match-leak-kinds: reachable,possible,definite,indirect
+  obj:*/libncurses*.so*
+}
+# 一部ディストロでは libtinfo に分離
+{
+  tinfo-any
+  Memcheck:Leak
+  match-leak-kinds: reachable,possible,definite,indirect
+  obj:*/libtinfo*.so*
+}

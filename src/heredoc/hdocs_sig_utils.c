@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:19:35 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/27 13:39:54 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/03 16:37:07 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,20 @@ static int	heredoc_handle_line(int wfd, t_redir *r, t_shell *sh, char *line)
 
 int	heredoc_loop(int wfd, t_redir *r, t_shell *sh)
 {
-	const char	*limiter;
-	char		*line;
-	int			rc;
+	char	*line;
+	int		rc;
 
-	limiter = r->arg;
 	rc = 0;
 	while (1)
 	{
 		line = readline("heredoc> ");
 		if (!line)
+		{
+			if (g_sig)
+				return (130);
 			break ;
-		if (ft_strcmp(line, limiter) == 0)
+		}
+		if (ft_strcmp(line, r->arg) == 0)
 		{
 			free(line);
 			break ;

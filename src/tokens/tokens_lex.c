@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 11:24:10 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/16 14:49:55 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 07:57:07 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	tok_lex_line(const char *s, t_tokvec *out, int *err)
 	cx.i = 0;
 	cx.st = LXS_NORMAL;
 	cx.out = out;
+	tokvec_init(out);
 	wb_init(&cx.wb);
 	rc = lex_run(&cx);
 	if (rc == TOK_OK && cx.st == LXS_IN_SQ)

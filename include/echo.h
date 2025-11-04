@@ -1,14 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   echo.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 14:49:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:50:06 by takawagu         ###   ########.fr       */
+/*   Created: 2025/11/03 08:51:27 by keitabe           #+#    #+#             */
+/*   Updated: 2025/11/03 10:19:45 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"minishell.h"
+#ifndef ECHO_H
+# define ECHO_H
 
+# include "libft.h"
+# include "minishell.h"
+# include <unistd.h>
+
+int	builtin_echo(char **av, int out_fd);
+
+#endif

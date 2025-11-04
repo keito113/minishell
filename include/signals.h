@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 13:48:27 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/29 08:49:50 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 08:27:17 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 
 # define _POSIX_C_SOURCE 200809L
 
+# include <errno.h>
+# include <readline/readline.h>
 # include <signal.h>
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <unistd.h>
 
 extern volatile sig_atomic_t	g_sig;

@@ -183,6 +183,7 @@ int							pipe_error_cleanup(t_pipe_ctx *ctx,
 								t_cmd **pipeline_cmds, size_t n, t_shell *sh);
 int							build_pipeline_cmds(const t_ast *root,
 								t_cmd ***out_seq, size_t *out_n, t_shell *sh);
+int							run_pipeline(const t_ast *root, t_shell *sh);
 
 // error
 int							return_laststatus(t_shell *sh, int error_code);

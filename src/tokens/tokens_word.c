@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 09:52:21 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/15 11:26:40 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 08:16:43 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,19 +107,15 @@ int	wb_end_part(t_wbuild *wb, t_quote_kind q)
 
 int	wb_emit_word_token(t_wbuild *wb, t_tokvec *out)
 {
-	t_token	tk;
+	t_wordinfo	w;
 
 	if (wb->blen > 0)
 		wb_end_part(wb, NO_QUOTE);
-	tk.token_kind = TK_WORD;
-	tk.args = NULL;
-	tk.word_info.parts = wb->v;
-	tk.word_info.parts_count = wb->len;
-	tk.word_info.had_dollar = wb->had_dollar;
-	tk.word_info.had_quotes = wb->had_quotes;
-	tk.fd_left = -1;
-	tk.hdoc_quoted = 0;
-	if (tokvec_push_word(out, &tk) != TOK_OK)
+	w.parts = wb->v;
+	w.parts_count = wb->len;
+	w.had_dollar = wb->had_dollar;
+	w.had_quotes = wb->had_quotes;
+	if (tokvec_push_word(out, w) != TOK_OK)
 	{
 		while (wb->len)
 			free(wb->v[--wb->len].text);

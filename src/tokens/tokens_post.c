@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 15:03:39 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/21 12:18:03 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 09:17:09 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,17 @@ int	tok_is_redir(t_tok_kind k)
 
 void	finalize_hdoc_flags(t_tokvec *tv)
 {
-	size_t	i;
-	char	*lim;
+	size_t		i;
+	char		*lim;
+	t_tok_kind	k;
+	t_tok_kind	nk;
 
 	i = 0;
 	while (i + 1 < tv->len)
 	{
-		if (tv->vector[i].token_kind == TK_HEREDOC && tv->vector[i
-			+ 1].token_kind == TK_WORD)
+		k = tv->vector[i].token_kind;
+		nk = tv->vector[i + 1].token_kind;
+		if (k == TK_HEREDOC && nk == TK_WORD)
 		{
 			tv->vector[i].hdoc_quoted = tv->vector[i + 1].word_info.had_quotes;
 			lim = join_parts_text(&tv->vector[i + 1].word_info);
