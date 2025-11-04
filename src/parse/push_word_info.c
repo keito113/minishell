@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   push_word_info.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 15:04:03 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 15:30:52 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/04 07:31:52 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "minishell.h"
 
 void	free_wordinfo_dup(t_wordinfo *info)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 11:44:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/22 14:35:28 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/04 08:06:21 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void		tokvec_free(t_tokvec *v);
 
 // tokens_vec.c
 void		tokvec_init(t_tokvec *v);
-int			tokvec_push_word(t_tokvec *v, const t_token *src);
+int			tokvec_push_word(t_tokvec *v, t_wordinfo w);
 int			tokvec_push_op(t_tokvec *v, t_tok_kind kind, int fd_left,
 				int hdoc_quoted);
 int			tokvec_push_eof(t_tokvec *v);

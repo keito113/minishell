@@ -6,14 +6,14 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/30 12:45:39 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 07:45:36 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/input.h"
-#include "include/minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
+// #include "include/input.h"
+// #include "include/minishell.h"
+// #include <stdio.h>
+// #include <stdlib.h>
 
 // static const char	*quote_to_str(t_quote_kind q)
 //{
@@ -102,78 +102,193 @@
 //	}
 //}
 
-static int	tokenize_line(const char *line, t_tokvec *out, int *err)
-{
-	int	local_err;
+//ここまで
+// static int	tokenize_line(const char *line, t_tokvec *out, int *err)
+// {
+// 	int	local_err;
 
-	if (!line || !out)
-		return (-1);
-	tokvec_init(out);
-	local_err = 0;
-	if (tok_lex_line(line, out, &local_err) < 0)
+// 	if (!line || !out)
+// 		return (-1);
+// 	tokvec_init(out);
+// 	local_err = 0;
+// 	if (tok_lex_line(line, out, &local_err) < 0)
+// 	{
+// 		fprintf(stderr, "[LEX_ERR] code=%d\n", local_err);
+// 		tokvec_free(out);
+// 		if (err)
+// 			*err = local_err;
+// 		return (-1);
+// 	}
+// 	finalize_hdoc_flags(out);
+// 	finalize_word_args(out);
+// 	if (err)
+// 		*err = local_err;
+// 	return (0);
+// }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	t_shell		sh;
+// 	char		*line;
+// 	t_ast		*root;
+// 	t_tokvec	token_vec;
+
+// 	(void)argc;
+// 	(void)argv;
+// 	sh = (t_shell){0};
+// 	if (env_init_from_envp(&sh.env, envp) < 0)
+// 	{
+// 		free_env_list(&sh.env);
+// 		return (1);
+// 	}
+// 	sh.envp = envp;
+// 	sh.last_status = 0;
+// 	ms_input_init();
+// 	while (1)
+// 	{
+// 		line = ms_readline("minishell$ ");
+// 		if (!line)
+// 		{
+// 			puts("exit");
+// 			break ;
+// 		}
+// 		if (!*line)
+// 		{
+// 			free(line);
+// 			continue ;
+// 		}
+// 		if (tokenize_line(line, &token_vec, NULL) != 0)
+// 		{
+// 			free(line);
+// 			continue ;
+// 		}
+// 		root = parse(&token_vec, &sh);
+// 		free(line);
+// 		if (!root)
+// 			continue ;
+// 		if (expand(root, &sh) < 0)
+// 		{
+// 			free_ast(root);
+// 			continue ;
+// 		}
+// 		exec_entry(root, &sh);
+// 		// dump_ast(root, 0);
+// 		free_ast(root);
+// 	}
+// 	free_env_list(&sh.env);
+// 	return (0);
+// }
+
+// src/main.c
+#include "minishell.h" // ← parse / exec_entry / expand / env_*
+#include "signals.h"
+#include <errno.h>
+#include <readline/history.h>
+#include <readline/readline.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+static void	init_shell(t_shell *sh, char **envp)
+{
+	memset(sh, 0, sizeof(*sh));
+	sh->interactive = 1;
+	sh->last_status = 0;
+	sh->env = NULL;
+	// ヘッダ定義に合わせて環境を初期化
+	if (env_init_from_envp(&sh->env, envp) != 0)
 	{
-		fprintf(stderr, "[LEX_ERR] code=%d\n", local_err);
-		tokvec_free(out);
-		if (err)
-			*err = local_err;
-		return (-1);
+		// 失敗しても最低限は動かす。必要ならエラー表示を追加。
 	}
-	finalize_hdoc_flags(out);
-	finalize_word_args(out);
-	if (err)
-		*err = local_err;
-	return (0);
+}
+
+static int	handle_line(char *line, t_shell *sh)
+{
+	t_tokvec	tv;
+	t_ast		*ast;
+	int			rc;
+	int			lex_err;
+
+	ast = NULL;
+	lex_err = 0;
+	if (!line || line[0] == '\0')
+		return (0);
+	// 1) lex
+	rc = tok_lex_line(line, &tv, &lex_err);
+	if (rc != TOK_OK)
+	{
+		// 未閉クォートなど → bash 準拠で 2 を返すのが一般的
+		sh->last_status = 2;
+		return (sh->last_status);
+	}
+	// 2) 事前構文チェック（<>配置や|の両端など）
+	if (precheck_syntax(&tv, sh))
+	{
+		tokvec_free(&tv);
+		sh->last_status = 2;
+		return (sh->last_status);
+	}
+	// 3) parse（AST 構築）※ ヘッダの型は t_ast *parse(t_tokvec *tokenvec, t_shell *sh)
+	ast = parse(&tv, sh);
+	// トークンは parse 後に解放
+	tokvec_free(&tv);
+	if (!ast)
+	{
+		sh->last_status = 2;
+		return (sh->last_status);
+	}
+	// 4) expand（変数展開など）
+	rc = expand(ast, sh);
+	if (rc != 0)
+	{
+		free_ast(ast);
+		sh->last_status = 1;
+		return (sh->last_status);
+	}
+	// 5) 実行（入口は exec_entry が安全。内部でパイプ/単発を振り分け）
+	rc = exec_entry(ast, sh);
+	free_ast(ast);
+	sh->last_status = rc;
+	return (rc);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell		sh;
-	char		*line;
-	t_ast		*root;
-	t_tokvec	token_vec;
+	t_shell	sh;
+	char	*line;
 
 	(void)argc;
 	(void)argv;
-	sh = (t_shell){0};
-	if (env_init_from_envp(&sh.env, envp) < 0)
-	{
-		free_env_list(&sh.env);
-		return (1);
-	}
-	sh.envp = envp;
-	sh.last_status = 0;
-	ms_input_init();
+	init_shell(&sh, envp);
 	while (1)
 	{
-		line = ms_readline("minishell$ ");
+		// REPL 用のシグナル設定（Ctrl-C: 新しい行／Ctrl-\ 無視 など）
+		sig_setup_readline();
+		// input モジュールを使わず素の readline を採用（プロンプトは任意）
+		line = readline("minishell$ ");
+		// Ctrl-C を受けた直後のフレーム（handler 側で g_sig=1 を想定）
+		if (g_sig)
+		{
+			g_sig = 0;
+			sh.last_status = 130; // bash 準拠
+			free(line);
+			continue ;
+		}
+		// Ctrl-D（EOF）
 		if (!line)
 		{
-			puts("exit");
+			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
-		if (!*line)
-		{
-			free(line);
-			continue ;
-		}
-		if (tokenize_line(line, &token_vec, NULL) != 0)
-		{
-			free(line);
-			continue ;
-		}
-		root = parse(&token_vec, &sh);
+		// 履歴（空行は追加しない）
+		if (line[0] != '\0')
+			add_history(line);
+		(void)handle_line(line, &sh);
 		free(line);
-		if (!root)
-			continue ;
-		if (expand(root, &sh) < 0)
-		{
-			free_ast(root);
-			continue ;
-		}
-		exec_entry(root, &sh);
-		// dump_ast(root, 0);
-		free_ast(root);
 	}
-	free_env_list(&sh.env);
-	return (0);
+	if (sh.env)
+		free_env_list(&sh.env);
+	return (sh.last_status);
 }
