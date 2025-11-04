@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 09:04:08 by takawagu          #+#    #+#             */
-/*   Updated: 2025/07/09 15:20:14 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:34:30 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <unistd.h>
 
 int		ft_printf(const char *format, ...);
-int		dispatch_format(char specifier, va_list args);
-int		handle_format(const char *format, va_list args, int *index);
+int		dispatch_format(char specifier, va_list *args);
+int		handle_format(const char *format, va_list *args, int *index);
 int		print_char(char c);
 int		print_str(const char *s);
 int		print_int(int n);

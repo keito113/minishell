@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   is_buiitin_name.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 11:44:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/03 10:20:15 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 12:02:18 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int	is_builtin_name(const char *name)
 		return (0);
 	if (ft_strcmp(name, "echo") == 0)
 		return (1);
-	// if (ft_strcmp(name, "cd") == 0)
-	// 	return (1);
+	if (ft_strcmp(name, "cd") == 0)
+		return (1);
 	if (ft_strcmp(name, "pwd") == 0)
 		return (1);
 	if (ft_strcmp(name, "export") == 0)
