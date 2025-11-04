@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 07:45:36 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/04 11:09:33 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,14 +193,16 @@
 
 static void	init_shell(t_shell *sh, char **envp)
 {
-	memset(sh, 0, sizeof(*sh));
+	ft_memset(sh, 0, sizeof(*sh));
 	sh->interactive = 1;
 	sh->last_status = 0;
 	sh->env = NULL;
+	sh ->envp = envp;
 	// ヘッダ定義に合わせて環境を初期化
 	if (env_init_from_envp(&sh->env, envp) != 0)
 	{
-		// 失敗しても最低限は動かす。必要ならエラー表示を追加。
+			free_env_list(&sh->env);
+ 			return ;
 	}
 }
 
@@ -217,23 +219,16 @@ static int	handle_line(char *line, t_shell *sh)
 		return (0);
 	// 1) lex
 	rc = tok_lex_line(line, &tv, &lex_err);
+	finalize_hdoc_flags(&tv);
+	finalize_word_args(&tv);
 	if (rc != TOK_OK)
 	{
 		// 未閉クォートなど → bash 準拠で 2 を返すのが一般的
 		sh->last_status = 2;
 		return (sh->last_status);
 	}
-	// 2) 事前構文チェック（<>配置や|の両端など）
-	if (precheck_syntax(&tv, sh))
-	{
-		tokvec_free(&tv);
-		sh->last_status = 2;
-		return (sh->last_status);
-	}
 	// 3) parse（AST 構築）※ ヘッダの型は t_ast *parse(t_tokvec *tokenvec, t_shell *sh)
 	ast = parse(&tv, sh);
-	// トークンは parse 後に解放
-	tokvec_free(&tv);
 	if (!ast)
 	{
 		sh->last_status = 2;
