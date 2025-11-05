@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 11:24:10 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 07:57:07 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/05 14:14:50 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,27 +32,40 @@ static int	lex_step_normal(t_lexctx *cx)
 	return (TOK_OK);
 }
 
-static int	lex_step_quote(t_lexctx *cx, char close_ch, t_quote_kind qk)
+static int	lex_open_quote(t_lexctx *cx, t_quote_kind qk)
 {
 	int	rc;
 
-	if (cx->s[cx->i] == close_ch)
+	rc = lex_enter_quote(qk, &cx->wb, &cx->st);
+	if (rc != TOK_OK)
+		return (rc);
+	cx->i++;
+	return (TOK_OK);
+}
+
+static int	lex_step_normal(t_lexctx *cx)
+{
+	int	rc;
+
+	if (is_space_tab(cx->s[cx->i]))
 	{
-		rc = wb_end_part(&cx->wb, qk);
+		rc = lex_handle_space_or_end(&cx->wb, cx->out);
 		if (rc != TOK_OK)
 			return (rc);
-		cx->st = LXS_NORMAL;
 		cx->i++;
 		return (TOK_OK);
 	}
-	else
-	{
-		rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
-		if (rc != TOK_OK)
-			return (rc);
-		cx->i++;
-		return (TOK_OK);
-	}
+	else if (cx->s[cx->i] == '|' || cx->s[cx->i] == '<' || cx->s[cx->i] == '>')
+		return (lex_handle_operator(cx->s, &cx->i, &cx->wb, cx->out));
+	else if (cx->s[cx->i] == '\'')
+		return (lex_open_quote(cx, SINGLE));
+	else if (cx->s[cx->i] == '"')
+		return (lex_open_quote(cx, DOUBLE));
+	rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
+	if (rc != TOK_OK)
+		return (rc);
+	cx->i++;
+	return (TOK_OK);
 }
 
 static int	lex_run(t_lexctx *cx)

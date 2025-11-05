@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 12:50:38 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 08:28:56 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/05 14:14:21 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,14 @@ static void	handler_int_rl(int sig)
 {
 	(void)sig;
 	g_sig = 1;
-	write(1, "\n", 1);
 }
 
 static int	rl_sigint_hook(void)
 {
 	if (g_sig)
 	{
-		g_sig = 0;
 		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		rl_done = 1;
 	}
 	return (0);
 }
