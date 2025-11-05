@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:27:07 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 13:31:27 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/05 13:38:57 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		builtin_echo(char **argv, int out_fd);
 int		builtin_exit(char **argv, t_shell *sh, int is_child);
 int		str_to_ll_checked(const char *s, long long *out);
 int		is_valid_identifier(const char *s);
-
+void	restore_builtin_redirects(t_fd_backup *backups, size_t len);
+int		setup_builtin_redirects(t_cmd *cmd, t_fd_backup **backups, size_t *len);
 
 #endif

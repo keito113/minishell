@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:20:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 13:21:18 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/05 13:36:47 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,72 +35,78 @@
 
 typedef struct s_env
 {
-	char			*key;
-	char			*val;
-	int				exported;
-	struct s_env	*next;
-}	t_env;
+	char					*key;
+	char					*val;
+	int						exported;
+	struct s_env			*next;
+}							t_env;
 
 typedef struct s_shell
 {
-	char	**envp;
-	int		last_status;
-	int		interactive;
-	t_env	*env;
-	int		exit_status;
-	int		should_exit;
-}	t_shell;
+	char					**envp;
+	int						last_status;
+	int						interactive;
+	t_env					*env;
+	int						exit_status;
+	int						should_exit;
+}							t_shell;
 
 typedef struct s_redir
 {
-	t_rtype				kind;
-	char				*arg;
-	t_wordinfo			*word_info;
-	int					here_doc_quoted;
-	int					fd_target;
-	int					hdoc_fd;
-	struct s_redir		*next;
-}	t_redir;
+	t_rtype					kind;
+	char					*arg;
+	t_wordinfo				*word_info;
+	int						here_doc_quoted;
+	int						fd_target;
+	int						hdoc_fd;
+	struct s_redir			*next;
+}							t_redir;
 
 typedef struct s_cmd
 {
-	char		**argv;
-	t_wordinfo	**word_infos;
-	size_t		argc;
-	t_redir		*redirs;
-	int			is_builtin;
-	int			is_child;
-	t_shell		*sh;
-}	t_cmd;
+	char					**argv;
+	t_wordinfo				**word_infos;
+	size_t					argc;
+	t_redir					*redirs;
+	int						is_builtin;
+	int						is_child;
+	t_shell					*sh;
+}							t_cmd;
 
 typedef struct s_ast
 {
-	t_ast_type	type;
+	t_ast_type				type;
 	union
 	{
 		struct
 		{
 			struct s_ast	*left;
 			struct s_ast	*right;
-		}	pipe;
-		t_cmd			cmd;
-	}	as;
-}	t_ast;
+		} pipe;
+		t_cmd				cmd;
+	} as;
+}							t_ast;
 
 typedef struct s_parse_ctx
 {
-	const t_token	*tokens;
-	size_t			len;
-	size_t			index;
-	t_shell			*sh;
-}	t_parse_ctx;
+	const t_token			*tokens;
+	size_t					len;
+	size_t					index;
+	t_shell					*sh;
+}							t_parse_ctx;
 
 typedef struct s_pipe_ctx
 {
-	int		prev_read;
-	int		pipefd[2];
-	int		need_pipe_out;
-	pid_t	last_pid;
-}	t_pipe_ctx;
+	int						prev_read;
+	int						pipefd[2];
+	int						need_pipe_out;
+	pid_t					last_pid;
+}							t_pipe_ctx;
+
+typedef struct s_fd_backup
+{
+	int						target_fd;
+	int						saved_fd;
+}							t_fd_backup;
 
 #endif
