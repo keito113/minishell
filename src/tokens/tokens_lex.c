@@ -6,31 +6,11 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 11:24:10 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/05 14:14:50 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/05 15:05:59 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
-
-static int	lex_step_normal(t_lexctx *cx)
-{
-	int	rc;
-
-	if (is_space_tab(cx->s[cx->i]))
-		rc = lex_handle_space_or_end(&cx->wb, cx->out);
-	else if (cx->s[cx->i] == '|' || cx->s[cx->i] == '<' || cx->s[cx->i] == '>')
-		rc = lex_handle_operator(cx->s, &cx->i, &cx->wb, cx->out);
-	else if (cx->s[cx->i] == '\'')
-		rc = lex_enter_quote(SINGLE, &cx->wb, &cx->st);
-	else if (cx->s[cx->i] == '"')
-		rc = lex_enter_quote(DOUBLE, &cx->wb, &cx->st);
-	else
-		rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
-	if (rc != TOK_OK)
-		return (rc);
-	cx->i++;
-	return (TOK_OK);
-}
 
 static int	lex_open_quote(t_lexctx *cx, t_quote_kind qk)
 {
@@ -66,6 +46,29 @@ static int	lex_step_normal(t_lexctx *cx)
 		return (rc);
 	cx->i++;
 	return (TOK_OK);
+}
+
+static int	lex_step_quote(t_lexctx *cx, char close_ch, t_quote_kind qk)
+{
+	int	rc;
+
+	if (cx->s[cx->i] == close_ch)
+	{
+		rc = wb_end_part(&cx->wb, qk);
+		if (rc != TOK_OK)
+			return (rc);
+		cx->st = LXS_NORMAL;
+		cx->i++;
+		return (TOK_OK);
+	}
+	else
+	{
+		rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
+		if (rc != TOK_OK)
+			return (rc);
+		cx->i++;
+		return (TOK_OK);
+	}
 }
 
 static int	lex_run(t_lexctx *cx)
