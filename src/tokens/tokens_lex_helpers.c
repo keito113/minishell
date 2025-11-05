@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 11:45:51 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/16 14:59:33 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/05 14:14:37 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	lex_handle_operator(const char *s, size_t *i, t_wbuild *wb, t_tokvec *out)
 	rc = tokvec_push_op(out, k, fd, 0);
 	if (rc != TOK_OK)
 		return (rc);
-	*i += oplen - 1;
+	*i += oplen;
 	return (TOK_OK);
 }
 
