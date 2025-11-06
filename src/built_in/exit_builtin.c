@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 10:48:57 by keitabe           #+#    #+#             */
-/*   Updated: 2025/10/30 12:29:38 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/06 11:21:25 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,16 @@ static int	exit_request(t_shell *sh, int is_child, int code, int print_exit)
 {
 	if (!is_child)
 	{
-		if (print_exit && sh->interactive)
-			ft_putendl_fd("exit", STDOUT_FILENO);
-		sh->exit_status = code;
-		sh->should_exit = 1;
+		if (sh)
+		{
+			if (print_exit && sh->interactive)
+				ft_putendl_fd("exit", STDOUT_FILENO);
+			sh->exit_status = code;
+			sh->should_exit = 1;
+		}
 		return (0);
 	}
 	exit(code);
-	return (0);
 }
 
 static void	print_num_required(const char *arg)
