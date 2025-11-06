@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 11:50:44 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 11:53:24 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:30:43 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,24 @@ static void	mark_builtins_after_expand(t_ast *node)
 	mark_builtins_after_expand(node->as.pipe.right);
 }
 
+static void	ast_bind_shell(t_ast *n, t_shell *sh)
+{
+	if (!n)
+		return ;
+	if (n->type == AST_CMD)
+	{
+		n->as.cmd.sh = sh;
+		return ;
+	}
+	ast_bind_shell(n->as.pipe.left, sh);
+	ast_bind_shell(n->as.pipe.right, sh);
+}
+
 int	exec_entry(t_ast *root, t_shell *sh)
 {
 	if (!root)
 		return (sh->last_status);
+	ast_bind_shell(root, sh);
 	mark_builtins_after_expand(root);
 	if (root->type == AST_CMD)
 		return (run_single_command(&root->as.cmd, sh));
