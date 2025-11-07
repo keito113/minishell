@@ -1,3 +1,0 @@
-minishell: exit: notnum: numeric argument required
-/usr/bin/timeout: the monitored command dumped core
-./tests/run_all.sh: line 23: 529506 Segmentation fault      "$TIMEOUT_BIN" "$@"

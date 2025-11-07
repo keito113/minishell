@@ -1,4 +1,0 @@
-minishell$ 999999999999>out
-minishell$ echo __STATUS:0
-__STATUS:0
-minishell$ exit

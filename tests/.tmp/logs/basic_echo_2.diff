@@ -1,5 +1,0 @@
---- /home/takawagu/minishell/tests/.tmp/logs/basic_echo_2.sh.body	2025-11-05 16:27:49.492986328 +0900
-+++ /home/takawagu/minishell/tests/.tmp/logs/basic_echo_2.ms.body	2025-11-05 16:27:49.491986275 +0900
-@@ -1 +1 @@
--hi world__STATUS:0
-+hi worldminishell$ echo __STATUS:0

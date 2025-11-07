@@ -1,3 +1,0 @@
-echo "$USER"
-echo __STATUS:0
-exit

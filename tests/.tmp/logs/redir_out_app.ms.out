@@ -1,3 +1,0 @@
-minishell$ echo A > outfile
-minishell$ echo B >> outfile
-minishell$ exit

@@ -1,5 +1,0 @@
-false
-echo $?; true
-echo $?
-echo __STATUS:0
-exit

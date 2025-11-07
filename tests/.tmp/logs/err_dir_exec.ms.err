@@ -1,3 +1,0 @@
-minishell: ./: Is a directory
-/usr/bin/timeout: the monitored command dumped core
-./tests/run_all.sh: line 23: 528695 Segmentation fault      "$TIMEOUT_BIN" "$@"

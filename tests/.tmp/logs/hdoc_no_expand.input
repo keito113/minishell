@@ -1,3 +1,0 @@
-cat <<'EOF'\nuser:$USER\nEOF
-echo __STATUS:0
-exit

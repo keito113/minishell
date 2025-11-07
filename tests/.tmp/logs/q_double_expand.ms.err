@@ -1,2 +1,0 @@
-/usr/bin/timeout: the monitored command dumped core
-./tests/run_all.sh: line 23: 528502 Segmentation fault      "$TIMEOUT_BIN" "$@"
