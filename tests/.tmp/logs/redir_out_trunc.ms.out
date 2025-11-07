@@ -1,0 +1,2 @@
+minishell$ echo A > outfile
+minishell$ exit

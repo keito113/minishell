@@ -1,0 +1,6 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/hdoc_expand.sh.body	2025-11-05 16:27:51.503091594 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/hdoc_expand.ms.body	2025-11-05 16:27:51.501091489 +0900
+@@ -1 +1,3 @@
++heredoc> user:$USER
++heredoc> EOF
+ user:

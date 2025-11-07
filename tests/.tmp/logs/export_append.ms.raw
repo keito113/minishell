@@ -1,0 +1,7 @@
+minishell$ export FOO=bar
+minishell$ export FOO+=baz
+minishell$ echo $FOO
+barbaz
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

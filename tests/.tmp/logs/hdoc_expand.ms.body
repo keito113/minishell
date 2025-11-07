@@ -1,0 +1,3 @@
+heredoc> user:$USER
+heredoc> EOF
+user:

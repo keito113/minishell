@@ -1,0 +1,7 @@
+minishell$ printf "a
+minishell$ b
+minishell$ c
+minishell$ " | grep b
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

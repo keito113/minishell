@@ -1,0 +1,3 @@
+echo a"$USER"b'c
+echo __STATUS:0
+exit
