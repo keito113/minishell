@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 11:44:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 08:06:21 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 12:38:48 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <stdlib.h>
 # include <sys/types.h>
 
-/* TOKENの種類を判別 */
 typedef enum e_tok_kind
 {
 	TK_WORD,      /* コマンド名・引数・リダイレクトのターゲット（展開前） */
