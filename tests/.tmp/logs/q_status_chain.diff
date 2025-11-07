@@ -1,6 +1,0 @@
---- /home/takawagu/minishell/tests/.tmp/logs/q_status_chain.sh.body	2025-11-05 16:27:50.202023461 +0900
-+++ /home/takawagu/minishell/tests/.tmp/logs/q_status_chain.ms.body	2025-11-05 16:27:50.201023408 +0900
-@@ -1,2 +1,2 @@
--1
-+1; true
- 0

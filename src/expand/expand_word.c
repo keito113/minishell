@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 17:22:25 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/20 15:44:19 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 15:09:33 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ char	*expand_word(const t_wordinfo *info, t_shell *sh)
 	const t_parts	*part;
 
 	i = 0;
-	part = &info->parts[i];
 	if (!info)
 		return (NULL);
 	if (!info->had_dollar)
@@ -91,6 +90,7 @@ char	*expand_word(const t_wordinfo *info, t_shell *sh)
 		return (NULL);
 	while (i < info->parts_count)
 	{
+		part = &info->parts[i];
 		if (part->quote == SINGLE)
 			result = join_plain_piece(result, part->text);
 		else

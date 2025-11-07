@@ -1,4 +1,0 @@
-minishell$ cat <<'EOF'\nuser:$USER\nEOF
-heredoc> echo __STATUS:0
-heredoc> exit
-heredoc> 

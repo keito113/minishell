@@ -1,3 +1,0 @@
-minishell: nosuchcmd: command not found
-/usr/bin/timeout: the monitored command dumped core
-./tests/run_all.sh: line 23: 528637 Segmentation fault      "$TIMEOUT_BIN" "$@"

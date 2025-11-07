@@ -1,3 +1,0 @@
-minishell: syntax error near unexpected token `|'
-/usr/bin/timeout: the monitored command dumped core
-./tests/run_all.sh: line 23: 529690 Segmentation fault      "$TIMEOUT_BIN" "$@"

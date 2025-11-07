@@ -1,4 +1,0 @@
-minishell$ echo a"$USER"b'c
-minishell$ echo __STATUS:0
-__STATUS:0
-minishell$ exit
