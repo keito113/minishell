@@ -6,7 +6,7 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 12:19:35 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/03 16:37:07 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 12:20:40 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	*heredoc_expand_line(const char *line, const t_redir *r,
 	return (expand_chunk(line, sh));
 }
 
-static int	heredoc_handle_line(int wfd, t_redir *r, t_shell *sh, char *line)
+int	heredoc_handle_line(int wfd, t_redir *r, t_shell *sh, char *line)
 {
 	char	*out;
 
@@ -72,30 +72,18 @@ static int	heredoc_handle_line(int wfd, t_redir *r, t_shell *sh, char *line)
 	return (0);
 }
 
-int	heredoc_loop(int wfd, t_redir *r, t_shell *sh)
+int	hdoc_line_matches(const char *line, const char *limiter)
 {
-	char	*line;
-	int		rc;
+	size_t	ln;
+	size_t	lm;
 
-	rc = 0;
-	while (1)
-	{
-		line = readline("heredoc> ");
-		if (!line)
-		{
-			if (g_sig)
-				return (130);
-			break ;
-		}
-		if (ft_strcmp(line, r->arg) == 0)
-		{
-			free(line);
-			break ;
-		}
-		rc = heredoc_handle_line(wfd, r, sh, line);
-		free(line);
-		if (rc)
-			break ;
-	}
-	return (rc);
+	if (!line || !limiter)
+		return (0);
+	ln = ft_strlen(line);
+	lm = ft_strlen(limiter);
+	if (ln != lm)
+		return (0);
+	if (ft_strncmp(line, limiter, lm) == 0)
+		return (1);
+	return (0);
 }

@@ -6,11 +6,12 @@
 /*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/06 16:37:09 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 08:25:44 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // src/main.c
+#include "input.h"
 #include "minishell.h" // ← parse / exec_entry / expand / env_*
 #include "signals.h"
 #include <errno.h>
@@ -25,7 +26,7 @@
 static void	init_shell(t_shell *sh, char **envp)
 {
 	ft_memset(sh, 0, sizeof(*sh));
-	sh->interactive = 1;
+	sh->interactive = isatty(STDIN_FILENO);
 	sh->last_status = 0;
 	sh->env = NULL;
 	sh->envp = envp;
@@ -94,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 		// REPL 用のシグナル設定（Ctrl-C: 新しい行／Ctrl-\ 無視 など）
 		sig_setup_readline();
 		// input モジュールを使わず素の readline を採用（プロンプトは任意）
-		line = readline("minishell$ ");
+		line = ms_readline("minishell$ ");
 		// Ctrl-C を受けた直後のフレーム（handler 側で g_sig=1 を想定）
 		if (g_sig)
 		{
@@ -127,3 +128,4 @@ int	main(int argc, char **argv, char **envp)
 	if (sh.env)
 		free_env_list(&sh.env);
 	return (sh.last_status);
+}
