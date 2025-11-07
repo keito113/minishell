@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_pipeline.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:24:15 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/03 15:48:22 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 20:03:31 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,18 @@ static int	run_pipeline_loop(t_cmd **pipe_cmds, size_t count_cmds,
 	return (0);
 }
 
+static void	mark_pipeline_children(t_cmd **cmds, size_t count)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < count)
+	{
+		cmds[i]->is_child = 1;
+		i++;
+	}
+}
+
 int	run_pipeline(const t_ast *root, t_shell *sh)
 {
 	t_cmd		**pipe_cmds;
@@ -75,6 +87,7 @@ int	run_pipeline(const t_ast *root, t_shell *sh)
 		return (sh->last_status);
 	pipe_ctx_init(&pipe_ctx);
 	sig_setup_parent_wait();
+	mark_pipeline_children(pipe_cmds, n);
 	if (run_pipeline_loop(pipe_cmds, n, &pipe_ctx, sh) != 0)
 	{
 		sig_setup_readline();
