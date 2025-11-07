@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:02:16 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/04 14:37:49 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:08:06 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ static int	redirect_fd(int src_fd, int target_fd, int kind)
 			close(src_fd);
 			return (-1);
 		}
+		close(src_fd);
+		return (0);
 	}
-	if (kind != R_HDOC || (kind == R_HDOC && src_fd != target_fd))
+	if (kind != R_HDOC)
 		close(src_fd);
 	return (0);
 }
