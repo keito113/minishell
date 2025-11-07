@@ -1,0 +1,8 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/pipe_redir.sh.body	2025-11-07 19:13:56.522713739 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/pipe_redir.ms.body	2025-11-07 19:13:56.521713688 +0900
+@@ -1 +1,5 @@
++
++
+ one
++
++

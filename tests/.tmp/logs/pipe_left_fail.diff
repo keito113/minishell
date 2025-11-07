@@ -1,0 +1,8 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/pipe_left_fail.sh.body	2025-11-07 19:13:56.595717429 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/pipe_left_fail.ms.body	2025-11-07 19:13:56.594717378 +0900
+@@ -1 +1,5 @@
++
++
+ 0
++
++

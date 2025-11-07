@@ -1,0 +1,11 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/q_status_chain.sh.body	2025-11-07 19:13:56.136694225 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/q_status_chain.ms.body	2025-11-07 19:13:56.134694124 +0900
+@@ -1,2 +1,8 @@
++
++
+ 1
++
++
+ 0
++
++

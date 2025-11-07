@@ -1,0 +1,5 @@
+minishell$ printf "a\\nb\\nc\\n" | grep b
+a\nb\nc\n
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

@@ -1,0 +1,5 @@
+minishell$ cat < infile | grep line2
+line2 $USER
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

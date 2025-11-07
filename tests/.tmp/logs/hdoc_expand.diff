@@ -1,0 +1,8 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/hdoc_expand.sh.body	2025-11-07 19:13:56.632719299 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/hdoc_expand.ms.body	2025-11-07 19:13:56.632719299 +0900
+@@ -1 +1,4 @@
+-user:
++
++user:$USER
++
++

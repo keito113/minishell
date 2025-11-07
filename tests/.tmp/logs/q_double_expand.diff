@@ -1,0 +1,7 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/q_double_expand.sh.body	2025-11-07 19:13:56.045689625 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/q_double_expand.ms.body	2025-11-07 19:13:56.044689575 +0900
+@@ -1 +1,4 @@
+ 
++
++
++

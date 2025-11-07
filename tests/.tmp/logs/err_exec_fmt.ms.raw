@@ -1,0 +1,6 @@
+minishell$ printf not-a-binary > a.out
+minishell$ chmod +x a.out
+minishell$ ./a.out
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_vec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 14:05:05 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 08:12:18 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 17:00:15 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	tokvec_push_op(t_tokvec *v, t_tok_kind kind, int fd_left, int hdoc_quoted)
 	tk.word_info.had_quotes = 0;
 	tk.fd_left = fd_left;
 	tk.hdoc_quoted = hdoc_quoted;
-	v->vector[v->len++] = tk;
+	ft_memcpy(&v->vector[v->len], &tk, sizeof(tk));
+	v->len++;
 	return (TOK_OK);
 }
 

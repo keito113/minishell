@@ -1,0 +1,7 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/basic_echo_1.sh.body	2025-11-07 19:13:55.867680627 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/basic_echo_1.ms.body	2025-11-07 19:13:55.866680576 +0900
+@@ -1 +1,4 @@
++
+ hello
++
++

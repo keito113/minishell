@@ -1,0 +1,7 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/redir_in_pipe.sh.body	2025-11-07 19:13:56.341704589 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/redir_in_pipe.ms.body	2025-11-07 19:13:56.340704538 +0900
+@@ -1 +1,4 @@
++
+ line2 $USER
++
++

@@ -1,0 +1,9 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/unset_remove.sh.body	2025-11-07 19:13:56.776726579 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/unset_remove.ms.body	2025-11-07 19:13:56.774726478 +0900
+@@ -1 +1,6 @@
+ 
++
++
++
++
++

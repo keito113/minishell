@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 14:35:26 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 12:48:18 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:43:10 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,23 @@ static t_env	*env_create_node(const char *key, char *dup_val, int exported)
 	new_node->exported = exported;
 	new_node->next = NULL;
 	return (new_node);
+}
+
+void	env_list_append_node(t_env **head, t_env *node)
+{
+	t_env	*tail;
+
+	if (node == NULL || head == NULL)
+		return ;
+	if (*head == NULL)
+	{
+		*head = node;
+		return ;
+	}
+	tail = *head;
+	while (tail->next != NULL)
+		tail = tail->next;
+	tail->next = node;
 }
 
 int	env_set(t_env **head, const char *key, const char *value, int exported)

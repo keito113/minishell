@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/07 08:25:44 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:50:43 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@
 #include <string.h>
 #include <unistd.h>
 
-static void	init_shell(t_shell *sh, char **envp)
+static int	init_shell(t_shell *sh, char **envp)
 {
 	ft_memset(sh, 0, sizeof(*sh));
 	sh->interactive = isatty(STDIN_FILENO);
 	sh->last_status = 0;
 	sh->env = NULL;
 	sh->envp = envp;
-	// ヘッダ定義に合わせて環境を初期化
 	if (env_init_from_envp(&sh->env, envp) != 0)
 	{
 		free_env_list(&sh->env);
-		return ;
+		return (-1);
 	}
+	return (0);
 }
 
 static int	handle_line(char *line, t_shell *sh)
@@ -49,24 +49,14 @@ static int	handle_line(char *line, t_shell *sh)
 	lex_err = 0;
 	if (!line || line[0] == '\0')
 		return (0);
-	// 1) lex
-	rc = tok_lex_line(line, &tv, &lex_err);
-	finalize_hdoc_flags(&tv);
-	finalize_word_args(&tv);
-	if (rc != TOK_OK)
-	{
-		// 未閉クォートなど → bash 準拠で 2 を返すのが一般的
-		sh->last_status = 2;
+	if (lexer(line, &tv, sh) < 0)
 		return (sh->last_status);
-	}
-	// 3) parse（AST 構築）※ ヘッダの型は t_ast *parse(t_tokvec *tokenvec, t_shell *sh)
 	ast = parse(&tv, sh);
 	if (!ast)
 	{
 		sh->last_status = 2;
 		return (sh->last_status);
 	}
-	// 4) expand（変数展開など）
 	rc = expand(ast, sh);
 	if (rc != 0)
 	{
@@ -74,11 +64,7 @@ static int	handle_line(char *line, t_shell *sh)
 		sh->last_status = 1;
 		return (sh->last_status);
 	}
-	// 5) 実行（入口は exec_entry が安全。内部でパイプ/単発を振り分け）
-	rc = exec_entry(ast, sh);
-	free_ast(ast);
-	sh->last_status = rc;
-	return (rc);
+	return (execute_ast(ast, sh));
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -89,7 +75,11 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	init_shell(&sh, envp);
+	if (init_shell(&sh, envp) < 0)
+	{
+		write(STDERR_FILENO, "minishell: failed to init env\n", 30);
+		return (1);
+	}
 	while (1)
 	{
 		// REPL 用のシグナル設定（Ctrl-C: 新しい行／Ctrl-\ 無視 など）

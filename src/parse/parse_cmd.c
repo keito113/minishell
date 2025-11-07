@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 18:51:03 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 16:33:57 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 16:52:27 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_ast	*parse_command(const t_token *token, size_t len, size_t *idx)
 	t_ast		*node;
 	t_tok_kind	kind;
 
-	cmd = (t_cmd){0};
+	ft_bzero(&cmd, sizeof(cmd));
 	while (*idx < len)
 	{
 		kind = token[*idx].token_kind;
@@ -75,6 +75,6 @@ t_ast	*parse_command(const t_token *token, size_t len, size_t *idx)
 	if (!node)
 		return (parse_command_fail(&cmd));
 	node->type = AST_CMD;
-	node->as.cmd = cmd;
+	ft_memcpy(&node->as.cmd, &cmd, sizeof(cmd));
 	return (node);
 }

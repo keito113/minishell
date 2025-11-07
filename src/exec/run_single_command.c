@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 14:04:08 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 18:55:36 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,36 +44,44 @@ static int	pre_single_command(t_cmd *cmd, t_shell *sh)
 	return (0);
 }
 
-int	run_single_command(t_cmd *cmd, t_shell *sh)
+static int	handle_fork_failure(t_cmd *cmd, t_shell *sh)
 {
-	pid_t		pid;
+	perror("fork");
+	sig_setup_readline();
+	close_hdocs_in_cmd(cmd);
+	sh->last_status = 1;
+	return (sh->last_status);
+}
+
+static int	exec_builtin_parent(t_cmd *cmd, t_shell *sh)
+{
 	t_fd_backup	*backups;
 	size_t		len;
 
-	if (pre_single_command(cmd, sh))
-		return (sh->last_status);
-	if (cmd->is_builtin)
+	if (setup_builtin_redirects(cmd, &backups, &len) < 0)
 	{
-		if (setup_builtin_redirects(cmd, &backups, &len) < 0)
-			sh->last_status = 1;
-		else
-		{
-			sh->last_status = exec_builtin(cmd, &sh->env);
-			restore_builtin_redirects(backups, len);
-		}
-		close_hdocs_in_cmd(cmd);
-		return (sh->last_status);
-	}
-	sig_setup_parent_wait();
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("fork");
-		sig_setup_readline();
 		close_hdocs_in_cmd(cmd);
 		sh->last_status = 1;
 		return (sh->last_status);
 	}
+	sh->last_status = exec_builtin(cmd, &sh->env);
+	restore_builtin_redirects(backups, len);
+	close_hdocs_in_cmd(cmd);
+	return (sh->last_status);
+}
+
+int	run_single_command(t_cmd *cmd, t_shell *sh)
+{
+	pid_t	pid;
+
+	if (pre_single_command(cmd, sh))
+		return (sh->last_status);
+	if (cmd->is_builtin)
+		return (exec_builtin_parent(cmd, sh));
+	sig_setup_parent_wait();
+	pid = fork();
+	if (pid < 0)
+		return (handle_fork_failure(cmd, sh));
 	if (pid == 0)
 		exec_child_single(cmd, sh);
 	wait_child_and_set_status(pid, sh);
