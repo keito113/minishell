@@ -1,0 +1,4 @@
+echo one | cat | cat > outfile
+cat outfile
+echo __STATUS:0
+exit

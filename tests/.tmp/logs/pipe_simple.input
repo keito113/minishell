@@ -1,0 +1,6 @@
+printf "a
+b
+c
+" | grep b
+echo __STATUS:0
+exit

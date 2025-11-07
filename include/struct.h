@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:20:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 12:38:10 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:37:45 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@
 #  define MINISHELL_FD_UPPER 1048576
 # endif
 
+typedef struct s_ast		t_ast;
+
 typedef struct s_env
 {
 	char					*key;
@@ -47,6 +49,7 @@ typedef struct s_shell
 	int						last_status;
 	int						interactive;
 	t_env					*env;
+	t_ast					*currrent_ast;
 	int						exit_status;
 	int						should_exit;
 }							t_shell;

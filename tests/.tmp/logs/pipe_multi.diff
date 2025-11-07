@@ -1,0 +1,4 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/pipe_multi.sh.body	2025-11-05 16:27:51.238077716 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/pipe_multi.ms.body	2025-11-05 16:27:51.237077664 +0900
+@@ -1 +0,0 @@
+-B

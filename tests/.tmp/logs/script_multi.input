@@ -1,0 +1,6 @@
+echo a
+echo b
+false
+echo $?
+echo __STATUS:0
+exit

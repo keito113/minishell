@@ -6,21 +6,12 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/05 13:37:23 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 14:04:08 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "signals.h"
-
-static void	exec_child_single(t_cmd *cmd, t_shell *sh)
-{
-	sig_setup_child_exec();
-	if (apply_redirs(cmd) < 0)
-		exit(1);
-	exec_external(cmd->argv, sh);
-	exit(127);
-}
 
 static int	wait_child_and_set_status(pid_t pid, t_shell *sh)
 {

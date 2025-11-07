@@ -1,0 +1,4 @@
+minishell: b: command not found
+minishell: c: command not found
+/usr/bin/timeout: the monitored command dumped core
+./tests/run_all.sh: line 23: 528972 Segmentation fault      "$TIMEOUT_BIN" "$@"
