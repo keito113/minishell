@@ -1,0 +1,4 @@
+true | false
+echo $?
+echo __STATUS:0
+exit

@@ -1,0 +1,8 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/basic_env.sh.body	2025-11-07 19:13:55.974686036 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/basic_env.ms.body	2025-11-07 19:13:55.973685985 +0900
+@@ -1 +1,5 @@
++
++
+ AAA=bbb
++
++

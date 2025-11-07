@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 11:50:44 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/06 11:30:43 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:42:55 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,14 @@ int	exec_entry(t_ast *root, t_shell *sh)
 	if (root->type == AST_CMD)
 		return (run_single_command(&root->as.cmd, sh));
 	return (run_pipeline(root, sh));
+}
+
+int	execute_ast(t_ast *ast, t_shell *sh)
+{
+	int	status;
+
+	status = exec_entry(ast, sh);
+	free_ast(ast);
+	sh->last_status = status;
+	return (status);
 }

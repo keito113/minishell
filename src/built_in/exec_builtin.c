@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 11:58:28 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 12:07:54 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 18:38:18 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	dispatch_builtin(t_cmd *cmd, t_env **penv)
 	else if (ft_strcmp(argv[0], "env") == 0)
 		status = builtin_env(argv, penv);
 	else if (ft_strcmp(argv[0], "cd") == 0)
-		status = builtin_cd(argv,penv);
+		status = builtin_cd(argv, penv);
 	else if (ft_strcmp(argv[0], "echo") == 0)
 		status = builtin_echo(argv, STDOUT_FILENO);
 	else if (ft_strcmp(argv[0], "pwd") == 0)

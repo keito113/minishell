@@ -1,0 +1,5 @@
+unset FOO 2>/dev/null || :
+export FOO=bar
+env | grep ^FOO=
+echo __STATUS:0
+exit

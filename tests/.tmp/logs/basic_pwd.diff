@@ -1,0 +1,7 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/basic_pwd.sh.body	2025-11-07 19:13:55.937684165 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/basic_pwd.ms.body	2025-11-07 19:13:55.935684064 +0900
+@@ -1 +1,4 @@
++
+ /home/takawagu/minishell/tests/.tmp/work
++
++

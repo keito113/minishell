@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 12:39:21 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 12:14:57 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:44:45 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,3 @@ int	builtin_cd(char **argv, t_env **env)
 	}
 	return (0);
 }
-

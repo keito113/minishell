@@ -1,0 +1,6 @@
+minishell$ true | false
+minishell$ echo $?
+1
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

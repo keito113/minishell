@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:23:32 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 14:07:26 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 18:43:26 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "struct.h"
 
+int		execute_ast(t_ast *ast, t_shell *sh);
 int		exec_entry(t_ast *root, t_shell *sh);
 int		run_single_command(t_cmd *cmd, t_shell *sh);
 int		apply_redirs(const t_cmd *cmd);

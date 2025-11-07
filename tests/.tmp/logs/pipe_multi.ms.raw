@@ -1,0 +1,5 @@
+minishell$ printf "a\\nb\\nc\\n" | grep b | tr a-z A-Z
+A\NB\NC\N
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

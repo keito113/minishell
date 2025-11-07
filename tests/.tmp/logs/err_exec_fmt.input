@@ -1,0 +1,5 @@
+printf not-a-binary > a.out
+chmod +x a.out
+./a.out
+echo __STATUS:0
+exit

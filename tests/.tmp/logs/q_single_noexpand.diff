@@ -1,0 +1,7 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/q_single_noexpand.sh.body	2025-11-07 19:13:56.010687856 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/q_single_noexpand.ms.body	2025-11-07 19:13:56.008687755 +0900
+@@ -1 +1,4 @@
++
+ $USER
++
++

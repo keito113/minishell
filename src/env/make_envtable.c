@@ -6,30 +6,11 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 16:15:23 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 12:47:30 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:48:13 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_env_list(t_env **head)
-{
-	t_env	*cur;
-	t_env	*next;
-
-	if (!head)
-		return ;
-	cur = *head;
-	while (cur)
-	{
-		next = cur->next;
-		free(cur->key);
-		free(cur->val);
-		free(cur);
-		cur = next;
-	}
-	*head = NULL;
-}
 
 static char	*ft_strndup(const char *str, size_t n)
 {
@@ -55,21 +36,23 @@ static char	*ft_strndup(const char *str, size_t n)
 	return (dup);
 }
 
-void	env_list_append_node(t_env **head, t_env *node)
+void	free_env_list(t_env **head)
 {
-	t_env	*tail;
+	t_env	*cur;
+	t_env	*next;
 
-	if (node == NULL || head == NULL)
+	if (!head)
 		return ;
-	if (*head == NULL)
+	cur = *head;
+	while (cur)
 	{
-		*head = node;
-		return ;
+		next = cur->next;
+		free(cur->key);
+		free(cur->val);
+		free(cur);
+		cur = next;
 	}
-	tail = *head;
-	while (tail->next != NULL)
-		tail = tail->next;
-	tail->next = node;
+	*head = NULL;
 }
 
 static int	env_push_pair(t_env **head, const char *key, const char *value)

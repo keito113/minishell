@@ -1,0 +1,9 @@
+--- /home/takawagu/minishell/tests/.tmp/logs/export_env.sh.body	2025-11-07 19:13:56.707723091 +0900
++++ /home/takawagu/minishell/tests/.tmp/logs/export_env.ms.body	2025-11-07 19:13:56.706723041 +0900
+@@ -1 +1,6 @@
++
++
++
+ FOO=bar
++
++

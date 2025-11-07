@@ -1,0 +1,6 @@
+minishell$ echo one | cat | cat > outfile
+minishell$ cat outfile
+one
+minishell$ echo __STATUS:0
+__STATUS:0
+minishell$ exit

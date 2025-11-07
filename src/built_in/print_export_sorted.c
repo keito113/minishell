@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 16:39:14 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/27 11:09:13 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/07 16:21:08 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	count_exported(const t_env *env)
 	n_exported = 0;
 	while (env)
 	{
-		if (env->exported)
+		if (env->exported && ft_strcmp(env->key, "_") != 0)
 			n_exported++;
 		env = env->next;
 	}
@@ -33,7 +33,7 @@ static void	fill_exported(const t_env *env, const t_env **arr)
 	index = 0;
 	while (env)
 	{
-		if (env->exported)
+		if (env->exported && ft_strcmp(env->key, "_") != 0)
 		{
 			arr[index] = env;
 			index++;
