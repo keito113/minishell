@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:06:06 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 18:55:36 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/08 18:04:37 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	wait_child_and_set_status(pid_t pid, t_shell *sh)
 
 static int	pre_single_command(t_cmd *cmd, t_shell *sh)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd || ((!cmd->argv || !cmd->argv[0]) && cmd->redirs == NULL))
 	{
 		sh->last_status = 1;
 		return (1);
