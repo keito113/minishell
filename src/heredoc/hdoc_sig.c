@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hdoc_sig.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:08:44 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/07 12:25:35 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/08 16:25:07 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,9 @@ int	heredoc_loop(int wfd, t_redir *r, t_shell *sh)
 		if (!line)
 			return (0);
 		if (hdoc_line_matches(line, r->arg))
-		{
-			free(line);
-			return (0);
-		}
-		write(wfd, line, ft_strlen(line));
-		write(wfd, "\n", 1);
+			return (free(line), 0);
+		if (heredoc_handle_line(wfd, r, sh, line))
+			return (free(line), 1);
 		free(line);
 	}
 }
