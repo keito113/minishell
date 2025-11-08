@@ -6,13 +6,13 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 12:39:21 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 17:44:45 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/08 19:22:47 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	update_pwd_vars(t_env **env)
+static int	update_pwd_vars(t_env **env, const char *logical_path)
 {
 	char		*cwd;
 	const t_env	*pwd_entry;
@@ -27,7 +27,12 @@ static int	update_pwd_vars(t_env **env)
 		return (-1);
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
+	{
+		if (!logical_path)
+			if (env_set(env, "PWD", logical_path, 1) < 0)
+				return (-1);
 		return (0);
+	}
 	if (env_set(env, "PWD", cwd, 1) < 0)
 	{
 		free(cwd);
@@ -96,7 +101,7 @@ int	builtin_cd(char **argv, t_env **env)
 		return (1);
 	if (do_chdir(path) != 0)
 		return (1);
-	if (update_pwd_vars(env) < 0)
+	if (update_pwd_vars(env, path) < 0)
 	{
 		write(2, "minishell: cd: failed to update PWD/OLDPWD\n", 44);
 		return (1);
