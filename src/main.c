@@ -6,11 +6,10 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/08 15:55:55 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:45:05 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// src/main.c
 #include "input.h"
 #include "minishell.h" // ← parse / exec_entry / expand / env_*
 #include "signals.h"
