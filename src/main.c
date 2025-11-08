@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/07 18:50:43 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/08 15:55:55 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static int	handle_line(char *line, t_shell *sh)
 	if (lexer(line, &tv, sh) < 0)
 		return (sh->last_status);
 	ast = parse(&tv, sh);
+	sh->currrent_ast = ast;
 	if (!ast)
 	{
 		sh->last_status = 2;

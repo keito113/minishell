@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:00:43 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 16:08:37 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:01:39 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,17 @@
 
 void	cleanup_child_and_exit(t_shell *sh, int status)
 {
-	if (sh && sh->env)
-		free_env_list(&sh->env);
+	if (sh)
+	{
+		if (sh->currrent_ast)
+		{
+			close_all_prepared_hdocs(sh->currrent_ast);
+			free_ast(sh->currrent_ast);
+			sh->currrent_ast = NULL;
+		}
+		if (sh->env)
+			free_env_list(&sh->env);
+	}
 	rl_clear_history();
 	exit(status);
 }
