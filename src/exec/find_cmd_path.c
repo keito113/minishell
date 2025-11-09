@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 14:05:47 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 18:09:42 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 21:54:00 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	*find_cmd_path(const char *cmd, t_shell *sh)
 
 	if (!cmd || *cmd == '\0')
 		return (NULL);
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	path_env = lookup_env("PATH", sh);

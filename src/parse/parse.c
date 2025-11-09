@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 17:46:25 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 19:58:25 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:27:11 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,26 @@ static t_ast	*append_pipe_segment(t_parse_ctx *ctx, t_ast *left)
 {
 	t_ast	*right;
 	t_ast	*pipe;
+	size_t	start;
 
-	ctx->index++;
+	start = ctx->index++;
 	right = parse_command(ctx->tokens, ctx->len, &ctx->index);
 	if (!right)
 	{
+		ctx->index = start;
 		if (ctx->sh)
 			ctx->sh->last_status = 1;
-		return (free_ast(left), NULL);
+		free_ast(left);
+		return (NULL);
 	}
 	pipe = create_pipe_node(left, right);
 	if (!pipe)
 	{
 		if (ctx->sh)
 			ctx->sh->last_status = 1;
-		return (free_ast(left), free_ast(right), NULL);
+		free_ast(left);
+		free_ast(right);
+		return (NULL);
 	}
 	return (pipe);
 }

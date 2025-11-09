@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/09 18:21:44 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:32:57 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ static int	handle_line(char *line, t_shell *sh)
 		return (sh->last_status);
 	}
 	rc = execute_ast(ast, sh);
-	free_ast(ast);
-	sh->currrent_ast = NULL;
 	return (rc);
 }
 

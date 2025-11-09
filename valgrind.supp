@@ -300,3 +300,9 @@
    fun:ms_readline
    fun:main
 }
+{
+    ignore_readline_leaks
+    Memcheck:Leak
+    ...
+    obj:*/libreadline.so.*
+}

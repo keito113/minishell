@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 17:50:15 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/09 17:51:27 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:49:56 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,19 @@ void	free_strarray(char **arr, ssize_t count)
 
 int	remove_arg(t_cmd *cmd, size_t index)
 {
-	size_t	i;
+	size_t		i;
+	t_wordinfo	*info;
 
 	if (index >= cmd->argc)
 		return (0);
 	free(cmd->argv[index]);
+	cmd->argv[index] = NULL;
+	info = cmd->word_infos[index];
+	if (info)
+	{
+		free_wordinfo_dup(info);
+		cmd->word_infos[index] = NULL;
+	}
 	i = index;
 	while (i + 1 < cmd->argc)
 	{
@@ -62,6 +70,7 @@ int	remove_arg(t_cmd *cmd, size_t index)
 	}
 	cmd->argc--;
 	cmd->argv[cmd->argc] = NULL;
+	cmd->word_infos[cmd->argc] = NULL;
 	return (0);
 }
 

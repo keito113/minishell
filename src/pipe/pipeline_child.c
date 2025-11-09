@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:21:40 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/03 15:37:51 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/09 22:06:24 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,17 @@ void	run_pipeline_child(t_pipe_ctx *pipe_ctx, t_cmd **pipeline_cmds,
 	pipe_ctx_attach_child_stdio(pipe_ctx);
 	pipe_ctx_child_close_unused(pipe_ctx);
 	if (apply_redirs(pipeline_cmds[i]) < 0)
-		exit(1);
+	{
+		free(pipeline_cmds);
+		cleanup_child_and_exit(sh, 1);
+	}
 	if (pipeline_cmds[i]->is_builtin)
 	{
 		st = run_builtin(pipeline_cmds[i], sh);
-		exit(st);
+		free(pipeline_cmds);
+		cleanup_child_and_exit(sh, st);
 	}
-	exec_external(pipeline_cmds[i]->argv, sh);
-	exit(127);
+	exec_external_pipe(pipeline_cmds[i]->argv, sh, pipeline_cmds);
+	free(pipeline_cmds);
+	cleanup_child_and_exit(sh, 127);
 }

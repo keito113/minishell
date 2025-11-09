@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:23:32 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 18:43:26 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 21:30:27 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ char	*find_cmd_path(const char *cmd, t_shell *sh);
 int		open_src_fd(t_redir *redir);
 void	exec_child_single(t_cmd *cmd, t_shell *sh);
 void	cleanup_child_and_exit(t_shell *sh, int status);
+void	validate_and_exec(char *path, char *const argv[], t_shell *sh);
 
 #endif

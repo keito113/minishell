@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:24:15 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 20:03:31 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 21:09:17 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int	run_pipeline(const t_ast *root, t_shell *sh)
 	if (run_pipeline_loop(pipe_cmds, n, &pipe_ctx, sh) != 0)
 	{
 		sig_setup_readline();
+		free(pipe_cmds);
 		return (sh->last_status);
 	}
 	close_hdocs_in_pipeline(pipe_cmds, n);

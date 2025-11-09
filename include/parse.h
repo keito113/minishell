@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:14:58 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/04 13:22:09 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 20:42:32 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ t_ast		*parse_command(const t_token *vector, size_t len, size_t *idx);
 int			is_redir_op(t_tok_kind k);
 int			precheck_syntax(const t_tokvec *tv, t_shell *sh);
 int			push_word_to_argv(t_cmd *cmd, const t_token *token);
-int			push_redir(t_cmd *cmd, const t_token *op_tok, const t_token *word_tok);
+int			push_redir(t_cmd *cmd, const t_token *op_tok,
+				const t_token *word_tok);
 void		free_cmd(t_cmd *cmd);
 void		free_argv(char **argv);
 t_ast		*parse_command_fail(t_cmd *cmd);
