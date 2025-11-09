@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:20:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/07 18:59:50 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:59:04 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,5 +221,27 @@ typedef struct s_fd_backup
 	int					target_fd;
 	int					saved_fd;
 }						t_fd_backup;
+
+typedef struct s_pathvec
+{
+	char				**segments;
+	size_t				size;
+	size_t				cap;
+}						t_pathvec;
+
+typedef struct s_expand_ctx
+{
+	t_cmd				*cmd;
+	t_shell				*sh;
+	const char			*ifs;
+}						t_expand_ctx;
+
+typedef struct s_insert_ctx
+{
+	t_cmd				*cmd;
+	char				**new_argv;
+	t_wordinfo			**new_infos;
+	size_t				nf;
+}						t_insert_ctx;
 
 #endif

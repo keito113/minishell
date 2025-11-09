@@ -6,21 +6,12 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/08 17:45:05 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 13:47:39 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "input.h"
-#include "minishell.h" // ← parse / exec_entry / expand / env_*
-#include "signals.h"
-#include <errno.h>
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "minishell.h"
 
 static int	init_shell(t_shell *sh, char **envp)
 {
@@ -42,10 +33,8 @@ static int	handle_line(char *line, t_shell *sh)
 	t_tokvec	tv;
 	t_ast		*ast;
 	int			rc;
-	int			lex_err;
 
 	ast = NULL;
-	lex_err = 0;
 	if (!line || line[0] == '\0')
 		return (0);
 	if (lexer(line, &tv, sh) < 0)

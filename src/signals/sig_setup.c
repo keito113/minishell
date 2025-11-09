@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_setup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 12:50:38 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/05 14:14:21 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/09 16:30:12 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ volatile sig_atomic_t g_sig; // mainに置く
 static void	handler_int_rl(int sig)
 {
 	(void)sig;
+	write(STDOUT_FILENO, "^C", 2);
 	g_sig = 1;
 }
 

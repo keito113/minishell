@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:27:07 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/08 18:35:36 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 14:58:47 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,12 @@ void	restore_builtin_redirects(t_fd_backup *backups, size_t len);
 int		setup_builtin_redirects(t_cmd *cmd, t_fd_backup **backups, size_t *len);
 int		target_fd_from_redir(const t_redir *redir);
 int		backup_target_fd(int target_fd, t_fd_backup *arr, size_t *len);
+char	*build_absolute_path(const char *path, t_env **env);
+int		path_vec_push(t_pathvec *vec, char *segment);
+int		path_vec_push_slice(t_pathvec *vec, const char *start, size_t len);
+void	path_vec_pop(t_pathvec *vec);
+void	path_vec_free(t_pathvec *vec);
+char	*normalize_absolute_path(const char *path);
+char	*path_vec_to_absolute(const t_pathvec *vec);
 
 #endif
