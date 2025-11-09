@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:28:33 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/09 13:47:39 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:21:44 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,14 @@ static int	handle_line(char *line, t_shell *sh)
 	if (rc != 0)
 	{
 		free_ast(ast);
+		sh->currrent_ast = NULL;
 		sh->last_status = 1;
 		return (sh->last_status);
 	}
-	return (execute_ast(ast, sh));
+	rc = execute_ast(ast, sh);
+	free_ast(ast);
+	sh->currrent_ast = NULL;
+	return (rc);
 }
 
 int	main(int argc, char **argv, char **envp)
