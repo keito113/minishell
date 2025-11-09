@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 13:08:44 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/08 16:25:07 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:38:50 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	heredoc_loop(int wfd, t_redir *r, t_shell *sh)
 
 	while (1)
 	{
-		line = readline("heredoc> ");
+		line = readline("> ");
 		if (g_sig)
 		{
 			g_sig = 0;
