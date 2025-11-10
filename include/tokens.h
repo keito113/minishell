@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 11:44:56 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/10 08:45:36 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 16:39:06 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	finalize_hdoc_flags(t_tokvec *tv);
 int		syntax_check(const t_tokvec *tv);
 void	finalize_word_args(t_tokvec *tv);
 
+int		lex_run(t_lexctx *cx);
 int		lexer(char *line, t_tokvec *tv, t_shell *sh);
 
 #endif

@@ -3,91 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_lex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 11:24:10 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/05 15:05:59 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/10 16:55:16 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "tokens.h"
 
-static int	lex_open_quote(t_lexctx *cx, t_quote_kind qk)
+static void	print_unclosed_quote_error(t_quote_kind kind)
 {
-	int	rc;
-
-	rc = lex_enter_quote(qk, &cx->wb, &cx->st);
-	if (rc != TOK_OK)
-		return (rc);
-	cx->i++;
-	return (TOK_OK);
-}
-
-static int	lex_step_normal(t_lexctx *cx)
-{
-	int	rc;
-
-	if (is_space_tab(cx->s[cx->i]))
-	{
-		rc = lex_handle_space_or_end(&cx->wb, cx->out);
-		if (rc != TOK_OK)
-			return (rc);
-		cx->i++;
-		return (TOK_OK);
-	}
-	else if (cx->s[cx->i] == '|' || cx->s[cx->i] == '<' || cx->s[cx->i] == '>')
-		return (lex_handle_operator(cx->s, &cx->i, &cx->wb, cx->out));
-	else if (cx->s[cx->i] == '\'')
-		return (lex_open_quote(cx, SINGLE));
-	else if (cx->s[cx->i] == '"')
-		return (lex_open_quote(cx, DOUBLE));
-	rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
-	if (rc != TOK_OK)
-		return (rc);
-	cx->i++;
-	return (TOK_OK);
-}
-
-static int	lex_step_quote(t_lexctx *cx, char close_ch, t_quote_kind qk)
-{
-	int	rc;
-
-	if (cx->s[cx->i] == close_ch)
-	{
-		rc = wb_end_part(&cx->wb, qk);
-		if (rc != TOK_OK)
-			return (rc);
-		cx->st = LXS_NORMAL;
-		cx->i++;
-		return (TOK_OK);
-	}
+	if (kind == SINGLE)
+		write(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `''\n",
+			sizeof("minishell: syntax error near unexpected token `''\n") - 1);
 	else
-	{
-		rc = lex_handle_char(cx->s[cx->i], cx->st, &cx->wb);
-		if (rc != TOK_OK)
-			return (rc);
-		cx->i++;
-		return (TOK_OK);
-	}
+		write(STDERR_FILENO,
+			"minishell: syntax error near unexpected token `\"'\n",
+			sizeof("minishell: syntax error near unexpected token `\"'\n") - 1);
 }
 
-static int	lex_run(t_lexctx *cx)
+static int	handle_unclosed_quote(const t_lexctx *cx, int rc)
 {
-	int	rc;
-
-	rc = TOK_OK;
-	while (cx->s[cx->i] != '\0')
+	if (rc != TOK_OK)
+		return (rc);
+	if (cx->st == LXS_IN_SQ)
 	{
-		if (cx->st == LXS_NORMAL)
-			rc = lex_step_normal(cx);
-		else if (cx->st == LXS_IN_SQ)
-			rc = lex_step_quote(cx, '\'', SINGLE);
-		else
-			rc = lex_step_quote(cx, '"', DOUBLE);
-		if (rc != TOK_OK)
-			return (rc);
+		print_unclosed_quote_error(SINGLE);
+		return (TOK_ERR_UNCLOSED_SQUOTE);
 	}
-	return (TOK_OK);
+	if (cx->st == LXS_IN_DQ)
+	{
+		print_unclosed_quote_error(DOUBLE);
+		return (TOK_ERR_UNCLOSED_DQUOTE);
+	}
+	return (rc);
 }
 
 int	tok_lex_line(const char *s, t_tokvec *out, int *err)
@@ -102,10 +53,7 @@ int	tok_lex_line(const char *s, t_tokvec *out, int *err)
 	tokvec_init(out);
 	wb_init(&cx.wb);
 	rc = lex_run(&cx);
-	if (rc == TOK_OK && cx.st == LXS_IN_SQ)
-		rc = TOK_ERR_UNCLOSED_SQUOTE;
-	if (rc == TOK_OK && cx.st == LXS_IN_DQ)
-		rc = TOK_ERR_UNCLOSED_DQUOTE;
+	rc = handle_unclosed_quote(&cx, rc);
 	if (rc == TOK_OK)
 		rc = lex_handle_space_or_end(&cx.wb, cx.out);
 	if (rc == TOK_OK)
