@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:25:07 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/09 22:05:40 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 08:37:52 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,7 @@ int		pipe_error_cleanup(t_pipe_ctx *ctx, t_cmd **pipeline_cmds, size_t n,
 int		build_pipeline_cmds(const t_ast *root, t_cmd ***out_seq, size_t *out_n,
 			t_shell *sh);
 int		run_pipeline(const t_ast *root, t_shell *sh);
-void	cmd_not_found_exit_pipe(const char *cmd, t_shell *sh,
-			t_cmd **pipeline_cmds);
-void	permission_denied_exit_pipe(const char *target, t_shell *sh,
-			t_cmd **pipeline_cmds);
-void	validate_and_exec_pipe(char *path, char *const argv[], t_shell *sh,
-			t_cmd **pipeline_cmds);
-void	exec_external_pipe(char *const argv[], t_shell *sh,
-			t_cmd **pipeline_cmds);
+void	validate_and_exec_pipe(char *path, char *const argv[], t_shell *sh);
+void	exec_external_pipe(char *const argv[], t_shell *sh);
 
 #endif

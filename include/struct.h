@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:20:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/09 22:16:31 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 07:54:35 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # endif
 
 typedef struct s_ast	t_ast;
+typedef struct s_cmd	t_cmd;
 
 typedef enum e_tok_kind
 {
@@ -150,6 +151,7 @@ typedef struct s_shell
 	t_ast				*currrent_ast;
 	int					exit_status;
 	int					should_exit;
+	t_cmd				**pipeline_cmds;
 }						t_shell;
 
 typedef struct s_redir

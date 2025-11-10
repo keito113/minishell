@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:24:15 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/09 21:09:17 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 09:31:08 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,14 @@ static void	mark_pipeline_children(t_cmd **cmds, size_t count)
 	}
 }
 
+static int	handle_pipeline_loop_failure(t_cmd **pipe_cmds, t_shell *sh)
+{
+	sig_setup_readline();
+	free(pipe_cmds);
+	sh->pipeline_cmds = NULL;
+	return (sh->last_status);
+}
+
 int	run_pipeline(const t_ast *root, t_shell *sh)
 {
 	t_cmd		**pipe_cmds;
@@ -85,19 +93,17 @@ int	run_pipeline(const t_ast *root, t_shell *sh)
 	n = 0;
 	if (setup_pipeline_exec(root, &pipe_cmds, &n, sh) != 0)
 		return (sh->last_status);
+	sh->pipeline_cmds = pipe_cmds;
 	pipe_ctx_init(&pipe_ctx);
 	sig_setup_parent_wait();
 	mark_pipeline_children(pipe_cmds, n);
 	if (run_pipeline_loop(pipe_cmds, n, &pipe_ctx, sh) != 0)
-	{
-		sig_setup_readline();
-		free(pipe_cmds);
-		return (sh->last_status);
-	}
+		return (handle_pipeline_loop_failure(pipe_cmds, sh));
 	close_hdocs_in_pipeline(pipe_cmds, n);
 	if (reap_pipeline_and_set_last_status(pipe_ctx.last_pid, sh) < 0)
 		sh->last_status = 1;
 	sig_setup_readline();
 	free(pipe_cmds);
+	sh->pipeline_cmds = NULL;
 	return (sh->last_status);
 }
