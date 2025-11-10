@@ -6,19 +6,14 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 12:50:38 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/09 20:43:42 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 08:21:53 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
 
-volatile sig_atomic_t g_sig; // mainに置く
+volatile sig_atomic_t	g_sig;
 
-// REPL（readline呼び出し中）にCtrl-C（SIGINT）が来たら、
-//フラグを立てる（g_sig = 1）
-// 1文字の改行を端末に出す
-//それ以外は一切しない。画面の整形・行の破棄はREPL側の処理に任せる。
-//非同期安全性を守る（write(2)と単純代入のみ）。
 static void	handler_int_rl(int sig)
 {
 	(void)sig;
@@ -36,10 +31,6 @@ static int	rl_sigint_hook(void)
 	return (0);
 }
 
-// readlineによるプロンプト待ちの最中に
-// SIGINT（Ctrl-C）：REPL専用ハンドラ handler_int_rl を使い、readlineをEINTRで中断させる
-// SIGQUIT（Ctrl-\）：無視にする（Bash体感に寄せる）
-//これにより、Ctrl-Cで行を捨てて新しいPS1に遷移できる（実際の行破棄はREPL側で空文字返却により達成）。
 void	sig_setup_readline(void)
 {
 	struct sigaction	sa;
@@ -57,9 +48,6 @@ void	sig_setup_readline(void)
 	sigaction(SIGQUIT, &ign, NULL);
 }
 
-//親シェルが子を実行・待機している短い区間だけ、親に届く SIGINT / SIGQUIT を無視に切り替える。
-//端末（TTY）は前面プロセスグループに信号を投げるため、親も受けるが、親が無視することで子だけがデフォルト動作（終了など）になる。
-// wait* が終わったらすぐに sig_setup_readline() に戻す。
 void	sig_setup_parent_wait(void)
 {
 	struct sigaction	ign;
@@ -71,8 +59,6 @@ void	sig_setup_parent_wait(void)
 	sigaction(SIGQUIT, &ign, NULL);
 }
 
-// fork() した子プロセスで、execve() の直前に、SIGINT / SIGQUIT をデフォルト挙動（SIG_DFL）に戻す。
-//外部コマンドは普通のプロセスとしてCtrl-C/Ctrl-\ に反応できるようにする。
 void	sig_setup_child_exec(void)
 {
 	struct sigaction	dfl;

@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 10:48:57 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/09 22:12:28 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 07:58:40 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static int	exit_request(t_shell *sh, int is_child, int code, int print_exit)
 		return (0);
 	}
 	cleanup_child_and_exit(sh, code);
-	// exit(code);
 	return (0);
 }
 

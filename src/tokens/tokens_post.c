@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_post.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 15:03:39 by keitabe           #+#    #+#             */
-/*   Updated: 2025/11/04 09:17:09 by keitabe          ###   ########.fr       */
+/*   Updated: 2025/11/10 07:35:20 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,29 +69,6 @@ void	finalize_hdoc_flags(t_tokvec *tv)
 		}
 		i++;
 	}
-}
-
-int	syntax_check(const t_tokvec *tv)
-{
-	size_t		i;
-	t_tok_kind	k;
-	t_tok_kind	nk;
-
-	if (tv->len > 0 && tv->vector[0].token_kind == TK_PIPE)
-		return (TOK_ERR_SYNTAX);
-	i = 0;
-	while (i + 1 < tv->len)
-	{
-		k = tv->vector[i].token_kind;
-		nk = tv->vector[i + 1].token_kind;
-		if (k == TK_PIPE && (nk == TK_PIPE || nk == TK_EOF))
-			return (TOK_ERR_SYNTAX);
-		if (tok_is_redir(k) && (nk == TK_EOF || nk == TK_PIPE
-				|| tok_is_redir(nk)))
-			return (TOK_ERR_SYNTAX);
-		i++;
-	}
-	return (TOK_OK);
 }
 
 void	finalize_word_args(t_tokvec *tv)

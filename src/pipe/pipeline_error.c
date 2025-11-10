@@ -6,7 +6,7 @@
 /*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 16:35:11 by takawagu          #+#    #+#             */
-/*   Updated: 2025/10/22 19:51:58 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 09:28:33 by takawagu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	pipe_cmds_cleanup_and_return(t_cmd **pipeline_cmds, t_shell *sh)
 {
 	free(pipeline_cmds);
+	sh->pipeline_cmds = NULL;
 	return (sh->last_status);
 }
 
