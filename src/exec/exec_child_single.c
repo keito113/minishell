@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child_single.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:00:43 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/10 09:22:47 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 10:35:59 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	cleanup_child_and_exit(t_shell *sh, int status)
 			free(sh->pipeline_cmds);
 			sh->pipeline_cmds = NULL;
 		}
-		if (sh->currrent_ast)
+		if (sh->current_ast)
 		{
-			close_all_prepared_hdocs(sh->currrent_ast);
-			free_ast(sh->currrent_ast);
-			sh->currrent_ast = NULL;
+			close_all_prepared_hdocs(sh->current_ast);
+			free_ast(sh->current_ast);
+			sh->current_ast = NULL;
 		}
 		if (sh->env)
 			free_env_list(&sh->env);

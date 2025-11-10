@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 13:20:51 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/10 07:54:35 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 10:35:10 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ typedef struct s_shell
 	int					last_status;
 	int					interactive;
 	t_env				*env;
-	t_ast				*currrent_ast;
+	t_ast				*current_ast;
 	int					exit_status;
 	int					should_exit;
 	t_cmd				**pipeline_cmds;

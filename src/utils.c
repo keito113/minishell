@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 08:53:33 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/10 09:15:05 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 10:36:53 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	expand_ast(t_ast *ast, t_shell *sh)
 	if (r_code != 0)
 	{
 		free_ast(ast);
-		sh->currrent_ast = NULL;
+		sh->current_ast = NULL;
 		sh->last_status = 1;
 		return (sh->last_status);
 	}
@@ -54,7 +54,7 @@ int	handle_line(char *line, t_shell *sh)
 	if (lexer(line, &tv, sh) < 0)
 		return (sh->last_status);
 	ast = parse(&tv, sh);
-	sh->currrent_ast = ast;
+	sh->current_ast = ast;
 	if (!ast)
 	{
 		sh->last_status = 2;

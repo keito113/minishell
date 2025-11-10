@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: takawagu <takawagu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: keitabe <keitabe@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 11:50:44 by takawagu          #+#    #+#             */
-/*   Updated: 2025/11/08 15:57:00 by takawagu         ###   ########.fr       */
+/*   Updated: 2025/11/10 10:35:36 by keitabe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	execute_ast(t_ast *ast, t_shell *sh)
 
 	status = exec_entry(ast, sh);
 	free_ast(ast);
-	sh->currrent_ast = NULL;
+	sh->current_ast = NULL;
 	sh->last_status = status;
 	return (status);
 }
