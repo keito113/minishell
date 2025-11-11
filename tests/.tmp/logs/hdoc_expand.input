@@ -1,5 +1,0 @@
-cat <<EOF
-user:$USER
-EOF
-echo __STATUS:0
-exit
